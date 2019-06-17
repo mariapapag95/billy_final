@@ -6,8 +6,9 @@ import Signup from './drafts_trash/Signup';
 import PostBill from './drafts_trash/PostBill'
 import PostPayment from './drafts_trash/PostPayment'
 import ConnectStripe from './ConnectStripe'
+import CardPayment from './CardPayment'
 import LandingPage from './LandingPage';
-import test from './test'
+import Test from './Test'
 
 function Routes (props) {
     return (
@@ -17,10 +18,11 @@ function Routes (props) {
                 <Route path = '/username' component = {Dash}/>
                 <Route path = '/login' component = {Login}/>
                 <Route path = '/signup' component = {Signup}/>
-                {/* <Route path = '/stripe' component = {ConnectStripe}/> */}
+                <Route path = '/stripe' component = {ConnectStripe}/>
+                <Route path = '/cardpayment' component = {CardPayment}/>
                 <Route path = '/bills' component = {PostBill}/>
                 <Route path = '/payments' component = {PostPayment}/>
-                <Route path = '/test' component = {test}/>
+                <Route path = '/Test' component = {Test}/>
             </BrowserRouter>
         </div>
     )
