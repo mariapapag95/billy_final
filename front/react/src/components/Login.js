@@ -1,16 +1,29 @@
 import React, {Component} from 'react'
-import { Redirect, Route, Switch } from 'react-router-dom'
-// import Dash from './Dash';
+import { Redirect, Switch, Route } from 'react-router-dom'
+import Dash from './Dash';
 
 class Login extends Component {
     state = {
-        login : false,
+        login : undefined,
+        errorMessage : ""
     }
 
-    redirect = () => {
-        if (this.state.login) {
-            return <Redirect to='/username' />
-        }
+    login = () => {
+        this.setState({login : true})
+    }
+
+    badlogin = () => {
+        this.setState({login : false})
+    }
+
+    redirect () {
+        console.log("HELO")
+        return <Switch><Redirect from='/login' to='/username'/></Switch>
+    }
+
+    refresh () {
+        console.log("login = false")
+        return null
     }
     
     render () {
@@ -31,11 +44,19 @@ class Login extends Component {
                     </input>
                     <button 
                         className = "paybutton"
-                        onClick = {()=>{this.setState({login : true})}}
+                        onClick = {()=>{this.login()}}
                     >
-                        LOGIN
+                        LOGIN SUCESSFUL
+                    </button>
+                    <button 
+                        className = "paybutton"
+                        onClick = {()=>{this.badlogin()}}
+                    >
+                        LOGIN UNSUCESSFUL
                     </button>
                 </form>
+                    {this.state.login===true ? 
+                        (this.redirect()) : (this.refresh())}
             </div>
         )
     }
