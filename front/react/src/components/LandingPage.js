@@ -10,13 +10,13 @@ function LandingPage() {
         <NavLink
         style = {{textDecorationSkip: true, color: 'white'}}
         className="landing landing1"
-        onClick={console.log("sign")}>
+        href="/signup">
         SIGN UP
         </NavLink>
         <NavLink
         style = {{textDecorationSkip: true, color: 'white'}}
         className="landing landing2"
-        onClick={console.log("log in")}>
+        href="/login">
         LOG IN
         </NavLink>
         </div>
