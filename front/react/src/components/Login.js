@@ -1,10 +1,16 @@
 import React, {Component} from 'react'
-// import { Redirect, Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 // import Dash from './Dash';
 
 class Login extends Component {
     state = {
         login : false,
+    }
+
+    redirect = () => {
+        if (this.state.login) {
+            return <Redirect to='/username' />
+        }
     }
     
     render () {
