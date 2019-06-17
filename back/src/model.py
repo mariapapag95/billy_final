@@ -2,6 +2,9 @@ from mapper import Database
 import sqlite3
 import time
 from operator import itemgetter
+import stripe
+
+stripe.api_key = "sk_test_Tjje5lIY8suQe9zd5d3S6xxO001QKSWAU4"
 
 class User:
 
@@ -15,14 +18,18 @@ class User:
     #     pass
     #     # TODO
     
-    # def new_user(username):
-    #     with Database() as db: 
-    #         db.cursor.execute('''INSERT INTO users (username) VALUES (?);''',
-    #                             (username))
-    #         db.cursor.execute('''SELECT * FROM users WHERE username = ?''', (username))
-    #         user = db.cursor.fetchall()
-    #         print(user)
-    #         return [{"user_id":1, "username":"testuser", "password":"testpassword"}]
+    def new_user(username):
+        with Database() as db: 
+            db.cursor.execute('''INSERT INTO users (username) VALUES (?);''',
+                                (username))
+            db.cursor.execute('''SELECT * FROM users WHERE username = ?''', (username))
+            user = db.cursor.fetchall()
+            print(user)
+            stripe.Customer.create(
+                description="Customer for jenny.rosen@example.com",
+                source="tok_visa" # obtained with Stripe.js
+            )
+            return [{"user_id":69, "username":"testuser", "password":"testpassword"}]
 
     def post_bill(total_due, due_by, due_to, caption):
         # add "due_by" as arguement and set self.username after login functionality has been made
@@ -58,6 +65,7 @@ class User:
             updated_bill = db.cursor.fetchall()
             values = [payment_id, amount_paid, paid_by, paid_to, created_on, note]
             payment = [dict(zip(keys, values))]
+            print("all good", payment)
             return payment
 
 
