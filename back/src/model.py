@@ -18,18 +18,18 @@ class User:
     #     pass
     #     # TODO
     
-    def new_user(username):
-        with Database() as db: 
-            db.cursor.execute('''INSERT INTO users (username) VALUES (?);''',
-                                (username))
-            db.cursor.execute('''SELECT * FROM users WHERE username = ?''', (username))
-            user = db.cursor.fetchall()
-            print(user)
-            stripe.Customer.create(
-                description="Customer for jenny.rosen@example.com",
-                source="tok_visa" # obtained with Stripe.js
-            )
-            return [{"user_id":69, "username":"testuser", "password":"testpassword"}]
+    # def new_user(username):
+    #     with Database() as db: 
+    #         db.cursor.execute('''INSERT INTO users (username) VALUES (?);''',
+    #                             (username))
+    #         db.cursor.execute('''SELECT * FROM users WHERE username = ?''', (username))
+    #         user = db.cursor.fetchall()
+    #         print(user)
+    #         stripe.Customer.create(
+    #             description="Customer for jenny.rosen@example.com",
+    #             source="tok_visa" # obtained with Stripe.js
+    #         )
+    #         return [{"user_id":69, "username":"testuser", "password":"testpassword"}]
 
     def post_bill(total_due, due_by, due_to, caption):
         # add "due_by" as arguement and set self.username after login functionality has been made
@@ -90,14 +90,25 @@ class Data:
             return payments
 
     def user_page(username):
+        bill_keys = ["bill_id","total_due","due_by", "due_to", "created_on", "caption"]
+        pay_keys = ["payment_id", "amount_paid", "paid_by", "paid_to", "created_on", "note"]
         with Database() as db:
-            db.cursor.execute('''SELECT * FROM bills WHERE due_by='{username}' 
-                                UNION
-                                 SELECT * FROM payments WHERE paid_by='{username}' 
-                                ORDER BY created_on DESC;'''
-                    .format(username = username))
-            user_posts = db.cursor.fetchall()
-            return user_posts
+            # db.cursor.execute('''SELECT * FROM bills WHERE due_by='{username}' 
+            #                     UNION
+            #                      SELECT * FROM payments WHERE paid_by='{username}' 
+            #                     ORDER BY created_on DESC;'''
+            #         .format(username = username))
+            # user_posts = db.cursor.fetchall()
+            db.cursor.execute('''SELECT * FROM bills WHERE due_by='{username}' '''.format(username = username))
+            all_bills = db.cursor.fetchall()
+            db.cursor.execute('''SELECT * FROM payments WHERE paid_by='{username}' '''.format(username = username))
+            all_pays = db.cursor.fetchall()
+            bills = [dict(zip(bill_keys, i)) for i in all_bills]
+            pays = [dict(zip(pay_keys, i)) for i in all_pays]
+            posts = bills + pays
+            posts = sorted(posts, key=itemgetter("created_on"), reverse=True)
+            print(posts)
+            return posts
 
 def all_posts():
     all_posts = Data.all_bills() + Data.all_payments()

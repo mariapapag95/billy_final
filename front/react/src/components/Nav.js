@@ -38,10 +38,14 @@ export default class Example extends React.Component {
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav style= {{textDecorationSkip: true, color: 'white'}} className="ml-auto" navbar>
               <NavItem>
-                <NavLink href="/user">My Page</NavLink>
+                <NavLink
+                style= {{textDecorationSkip: true, color: 'white'}} 
+                href="/user">My Page</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/">Logout</NavLink>
+                <NavLink 
+                style= {{textDecorationSkip: true, color: 'white'}}
+                href="/">Logout</NavLink>
               </NavItem>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>

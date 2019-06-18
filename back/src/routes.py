@@ -9,12 +9,17 @@ cors = CORS(app)
 
 @app.route('/')
 def API():
-    return jsonify({"API": "Billy"})
+    return jsonify({"API" : "Billy"})
 
-@app.route('/signup', methods=['POST'])
-def signup():
-    username = request.json['username']
-    return jsonify(User.new_user(username))
+# @app.route('/signup', methods=['POST'])
+# def signup():
+#     username = request.json['username']
+#     return jsonify(User.new_user(username))
+
+@app.route('/user', methods=['GET'])
+def user_page():
+    username = "Maria"
+    return jsonify(Data.user_page(username))
 
 @app.route('/api/all', methods=['GET'])
 def all_data():

@@ -1,21 +1,25 @@
 import React from 'react';
 import Post from './Post'
-import Nav  from './Nav'
-//mport PayForm from './drafts_trash/PayForm1'
-import PostForm from './PostForm';
+import { TabContent, TabPane, Nav, NavItem, NavLink, NavbarToggler, Collapse } from 'reactstrap';
+import classnames from 'classnames';
+import UserPage from './UserPage';
+import MakePost from './MakePost';
 
 const url = `http://127.0.0.1:5000/api/`
 
 export default class Dash extends React.Component {
     constructor(props){
     super(props)
+    this.toggle = this.toggle.bind(this);
     this.state = {
+        activeTab: '1',
         allPosts: [],
         payForm: false,
         postForm: false,
         amountPaid: undefined,
         note: '',
         id: undefined,
+        collapsed: true
     }
 }
 
@@ -67,20 +71,13 @@ export default class Dash extends React.Component {
         console.log("LIKE button pressed with this id::", id)
     }
 
-    makePost() {
-        this.setState({postForm : !this.state.postForm})
+    toggle(tab) {
+        if (this.state.activeTab !== tab) {
+            this.setState({
+            activeTab: tab
+            });
+        }
     }
-
-    test() {
-        console.log("this is a test")
-    }
-
-    // pay(e) {
-    //     let billAmount = e.target.value
-    //     console.log(billAmount)
-
-    //     onClick={e => this.pay(e, "value")}
-    // }
 
     render () {
         let posts = this.state.allPosts.map((element, i) => {
@@ -104,23 +101,42 @@ export default class Dash extends React.Component {
         return (
             <div>
                 <div>
-                <Nav/>
-                </div>
-                {/* <button className="test" onClick={()=>{this.test()}}>
-                    test
-                </button> */}
-                <button 
-                className="test"
-                onClick={()=>{this.makePost()}}>
-                {"POST YOUR BILL"}
-                </button>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <PostForm hidden={this.state.postForm}/>
+                <Nav tabs>
+                <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
+                <Collapse isOpen={!this.state.collapsed} navbar></Collapse>
+            <NavItem>
+            <NavLink
+                className={classnames({ active: this.state.activeTab === '1' })}
+                onClick={() => { this.toggle('1'); }}
+                >
+                BILLY
+            </NavLink>
+            </NavItem>
+            <NavItem>
+            <NavLink
+                className={classnames({ active: this.state.activeTab === '2' })}
+                onClick={() => { this.toggle('2'); }}
+                >
+                USER
+            </NavLink>
+            </NavItem>
+            <NavItem>
+            <NavLink
+                className={classnames({ active: this.state.activeTab === '3' })}
+                onClick={() => { this.toggle('3'); }}
+                >
+                POST BILL
+            </NavLink>
+            </NavItem>
+            </Nav>
+            <TabContent activeTab={this.state.activeTab}>
+            <TabPane tabId="1">
+                <div>
+            
                 <div>{posts}</div>
-                <div className='makepost'>
+
+                {this.state.payForm ? 
+                    (<div className='makepost'>
                 <form>
                     <input 
                     className='input'
@@ -139,31 +155,19 @@ export default class Dash extends React.Component {
                     PAY
                     </button>
                 </form>
-            </div>
-                {/* <PayForm hidden={this.state.payForm}/> */}
-            </div>
-            // <div className="box">
-            // <Form className="box">
-            // <Form.Group controlId="formBasicEmail">
-            //     <Form.Label>Email address</Form.Label>
-            //     <Form.Control type="email" placeholder="Enter email" />
-            //     <Form.Text className="text-muted">
-            //     We'll never share your email with anyone else.
-            //     </Form.Text>
-            // </Form.Group>
+                </div>):(null)}
 
-            // <Form.Group controlId="formBasicPassword">
-            //     <Form.Label>Password</Form.Label>
-            //     <Form.Control type="password" placeholder="Password" />
-            // </Form.Group>
-            // <Form.Group controlId="formBasicChecbox">
-            //     <Form.Check type="checkbox" label="Check me out" />
-            // </Form.Group>
-            // <Button variant="primary" type="submit">
-            //     Submit
-            // </Button>
-            // </Form>
-            // </div>
+                </div>
+            </TabPane>
+            <TabPane tabId="2">
+                <UserPage/>
+            </TabPane>
+            <TabPane tabId="3">
+                <MakePost/>
+            </TabPane>
+            </TabContent>
+            </div>
+            </div>
         )
     }
 }

@@ -16,12 +16,10 @@ class Login extends Component {
     }
 
     redirect () {
-        console.log("HELO")
         return <Switch><Redirect from='/login' to='/username'/></Switch>
     }
 
     refresh () {
-        console.log("login = false")
         return null
     }
     

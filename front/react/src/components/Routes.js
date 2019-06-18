@@ -3,6 +3,7 @@ import {Route, BrowserRouter} from 'react-router-dom';
 import Dash from './Dash'
 import Login from './Login'
 import Signup from './Signup';
+import UserPage from './UserPage'
 import PostBill from './drafts_trash/PostBill'
 import PostPayment from './drafts_trash/PostPayment'
 import ConnectStripe from './ConnectStripe'
@@ -16,9 +17,10 @@ function Routes () {
             <BrowserRouter>
                 <Route exact path = '/' component = {LandingPage}/>
                 <Route path = '/username' component = {Dash}/>
+                <Route path = '/user' component = {UserPage}/>
                 <Route path = '/login' component = {Login}/>
                 <Route path = '/signup' component = {Signup}/>
-                <Route path = '/stripe' component = {ConnectStripe}/>
+                <Route path = '/connectstripe' component = {ConnectStripe}/>
                 <Route path = '/cardpayment' component = {CardPayment}/>
                 <Route path = '/bills' component = {PostBill}/>
                 <Route path = '/payments' component = {PostPayment}/>

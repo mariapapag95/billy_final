@@ -17,7 +17,7 @@ class Signup extends Component {
 
     redirect () {
         console.log("HELO")
-        return <Switch><Redirect from='/signup' to='/username'/></Switch>
+        return <Switch><Redirect from='/signup' to='/connectstripe'/></Switch>
     }
 
     refresh () {
