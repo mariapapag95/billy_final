@@ -100,7 +100,7 @@ export default class Dash extends React.Component {
     // }
 
     paidFormat(string,string2) {
-        return string + " paid $" + string2
+        return string + " paid " + string2
     }
 
     render () {
@@ -108,11 +108,10 @@ export default class Dash extends React.Component {
             return <div key={i}>
             <div className={element.bill_id === undefined ? "paycontainer" : "billcontainer"} >
             <Navbar color="faded" light>
-            <div>{element.due_by === undefined ? this.paidFormat(element.paid_by, element.amount_paid) : element.due_by}</div>
+            <div>{element.due_by === undefined ? this.paidFormat(element.paid_by, element.bill_owner) : element.due_by}</div>
             <div>${element.total_due || element.amount_paid}</div>
             <div>{element.due_to || element.paid_to}</div>
             <div><ReactTimeAgo date = {element.created_on * 1000} timeStyle = "twitter"/></div>
-            <br/>
             {this.state.payForm ? 
                 (<div className='makepost'>
                 <form>

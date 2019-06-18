@@ -48,31 +48,38 @@ class User:
     def pay_bill(amount_paid, paid_by, note, bill_id):
         created_on = int(time.time())
         #created_on = created_on.strftime("%c")
-        keys = ["payment_id", "amount_paid", "paid_by", "paid_to", "created_on", "note"]
+        keys = ["payment_id", "amount_paid", "paid_by", "paid_to", "created_on", "note", "bill_owner"]
         with Database() as db: 
             db.cursor.execute('''SELECT * FROM bills WHERE bill_id = ?''', (bill_id)) 
             bill = db.cursor.fetchall()
             bill_amount = bill[0][1]
+            bill_owner = bill[0][2]
             paid_by = "Maria"
             paid_to = bill[0][3]
-            db.cursor.execute('''INSERT INTO payments (amount_paid, paid_by, paid_to, created_on, note)
-                                VALUES (?, ?, ?, ?, ?);''',
-                                (amount_paid, paid_by, paid_to, created_on, note))
+            contributors = bill[0][6]
+            db.cursor.execute('''INSERT INTO payments (amount_paid, paid_by, paid_to, created_on, note, bill_owner)
+                                VALUES (?, ?, ?, ?, ?, ?);''',
+                                (amount_paid, paid_by, paid_to, created_on, note, bill_owner))
             payment_id = db.cursor.lastrowid
             new_total = (bill_amount) - (amount_paid)
+            if contributors != None and contributors != paid_by:
+                contributors = contributors + ', ' + paid_by
+            else:
+                contributors = paid_by
             db.cursor.execute('''UPDATE bills SET total_due = ? WHERE bill_id = ?''', (new_total, bill_id))
+            db.cursor.execute('''UPDATE bills SET contributors = ? WHERE bill_id = ?''', (contributors, bill_id))
             db.cursor.execute('''SELECT * FROM bills WHERE bill_id = ?''', (bill_id))
             updated_bill = db.cursor.fetchall()
-            values = [payment_id, amount_paid, paid_by, paid_to, created_on, note]
+            print(updated_bill)
+            values = [payment_id, amount_paid, paid_by, paid_to, created_on, note, bill_owner]
             payment = [dict(zip(keys, values))]
-            print("all good", payment)
             return payment
 
 
 class Data:
 
     def all_bills():
-        keys = ["bill_id","total_due","due_by", "due_to", "created_on", "caption"]
+        keys = ["bill_id","total_due","due_by", "due_to", "created_on", "caption", "contributors"]
         with Database() as db:
             db.cursor.execute('''SELECT * FROM bills
                                     ORDER BY created_on DESC;''')
@@ -81,7 +88,7 @@ class Data:
             return bills
 
     def all_payments():
-        keys = ["payment_id", "amount_paid", "paid_by", "paid_to", "created_on", "note"]
+        keys = ["payment_id", "amount_paid", "paid_by", "paid_to", "created_on", "note", "bill_owner"]
         with Database() as db:
             db.cursor.execute('''SELECT * FROM payments 
                                     ORDER BY created_on DESC;''')
@@ -90,8 +97,8 @@ class Data:
             return payments
 
     def user_page(username):
-        bill_keys = ["bill_id","total_due","due_by", "due_to", "created_on", "caption"]
-        pay_keys = ["payment_id", "amount_paid", "paid_by", "paid_to", "created_on", "note"]
+        bill_keys = ["bill_id","total_due","due_by", "due_to", "created_on", "caption", "contributors"]
+        pay_keys = ["payment_id", "amount_paid", "paid_by", "paid_to", "created_on", "note", "bill_owner"]
         with Database() as db:
             # db.cursor.execute('''SELECT * FROM bills WHERE due_by='{username}' 
             #                     UNION
@@ -107,7 +114,6 @@ class Data:
             pays = [dict(zip(pay_keys, i)) for i in all_pays]
             posts = bills + pays
             posts = sorted(posts, key=itemgetter("created_on"), reverse=True)
-            print(posts)
             return posts
 
 def all_posts():

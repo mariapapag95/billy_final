@@ -16,7 +16,8 @@ cursor.execute('''CREATE TABLE bills(
     due_to VARCHAR,
     created_on INTEGER,
     caption VARCHAR, 
-    FOREIGN KEY (due_by) REFERENCES users(username)
+    contributors VARCHAR,
+    FOREIGN KEY (due_by, contributors) REFERENCES users(username, username)
     );''')    
 
 cursor.execute('''CREATE TABLE payments(
@@ -26,7 +27,8 @@ cursor.execute('''CREATE TABLE payments(
     paid_to VARCHAR,
     created_on INTEGER,
     note VARCHAR,
-    FOREIGN KEY (paid_by) REFERENCES users(username)
+    bill_owner VARCHAR,
+    FOREIGN KEY (paid_by, bill_owner) REFERENCES users(username, username)
 );''')
 
 
