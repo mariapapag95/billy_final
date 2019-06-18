@@ -79,8 +79,6 @@ export default class Dash extends React.Component {
             this.setState({
             activeTab: tab,
             });
-        console.log(this.state.activeTab !== tab)
-        return this.state.activeTab !== tab
         }
     }
 
@@ -119,7 +117,7 @@ export default class Dash extends React.Component {
         return (
             <div>
                 <div>
-                <Nav tabs style={{backgroundColor: 'rgb(207, 68, 43)', 
+                <Nav tabs style={{backgroundColor: 'rgba(248,80,50,1)', 
                     fontFamily: 'Lucida Console, Monaco, monospace', 
                     fontStyle : "strong",
                     fontSize : "large"}}>

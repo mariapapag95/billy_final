@@ -3,6 +3,7 @@ from flask_cors import CORS
 from model import User, Data, all_posts
 from pprint import pprint
 import stripe
+import requests
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -59,6 +60,16 @@ def pay_bill(id_num):
     bill_id = id_num
     return jsonify(User.pay_bill(amount_paid, paid_by, note, bill_id))
     
+
+@app.route('/api/stripe/customer', methods=['POST'])
+def create_customer():
+    data = {
+    'description': request.json['description'],
+    'source': 'tok_amex'}
+    response = requests.post('https://api.stripe.com/v1/customers', data=data, auth=('sk_test_AFKPFfpBFihGghSPpvizoKJW00C5YScapb', ''))
+    print("\n\n\n", response, "\n\n\n")
+    print("\n\n\n", response.json(), "\n\n\n")
+    return jsonify(response.json())
 
 
 # @app.route('/api/bills',methods=['POST'])
