@@ -5,6 +5,8 @@ import UserPage from './UserPage';
 import MakePost from './MakePost';
 import ReactTimeAgo from 'react-time-ago/tooltip'
 import 'react-time-ago/Tooltip.css'
+// import StripeButton from './StripeButton';
+// import CheckoutForm from './CheckoutForm';
 
 const url = `http://127.0.0.1:5000/api/`
 
@@ -12,7 +14,6 @@ export default class Dash extends React.Component {
     constructor(props){
     super(props)
     this.toggle = this.toggle.bind(this);
-    this.toggleNavbar = this.toggleNavbar.bind(this);
     this.state = {
         activeTab: '1',
         allPosts: [],
@@ -81,73 +82,36 @@ export default class Dash extends React.Component {
         }
     }
 
-    toggleNavbar() {
-        this.setState({
-            collapsed: !this.state.collapsed
-        });
-    }
-
-    // formatDate(date) {
-    // // makes dates formated 
-    // // to be used for graph
-    //     let d = new Date(date),
-    //     month = '' + (d.getMonth() + 1),
-    //     day = '' + d.getDate(),
-    //     year = d.getFullYear();
-    //     if (month.length < 2) month = '0' + month;
-    //     if (day.length < 2) day = '0' + day;
-    //     return [month, day, year].join('-');
-    // }
-
     paidFormat(string,string2) {
         return string + " paid " + string2
     }
 
     render () {
+
         let posts = this.state.allPosts.map((element, i) => {
             return <div key={i}>
             <div className={element.bill_id === undefined ? "paycontainer" : "billcontainer"} >
-            <Navbar color="faded" light>
+            <Navbar>
+            {/* <span><div className="icon"></div></span> */}
             <div>{element.due_by === undefined ? this.paidFormat(element.paid_by, element.bill_owner) : element.due_by}</div>
             <div>${element.total_due || element.amount_paid}</div>
             <div>{element.due_to || element.paid_to}</div>
-            <div><ReactTimeAgo date = {element.created_on * 1000} timeStyle = "twitter"/></div>
-            {this.state.payForm ? 
-                (<div className='makepost'>
-                <form>
-                    <input 
-                    className='input'
-                    id='amountPaid'
-                    placeholder='Enter $ amount'>
-                    </input>
-                    <input 
-                    className='input'
-                    id='note'
-                    placeholder='add note'>
-                    </input>
-                    <button 
-                    className="test"
-                    type="submit"
-                    onClick={()=>{this.handleInput()}}>
-                    PAY
-                    </button>
-                </form>
-                </div>) : 
-                (<button 
-            id={element.bill_id || element.payment_id} 
-            className={element.bill_id === undefined ? "likebutton" : "paybutton"} 
-            onClick={()=>{element.total_due === undefined ? this.like(element.payment_id) : this.pay(element.bill_id)}}>
-            {element.bill_id === undefined ? "LIKE" : "PAY"}
-            </button>)} 
+            <div className="comment"><ReactTimeAgo date = {element.created_on * 1000} timeStyle = "twitter"/></div>
             </Navbar>
             <div className="comment">"{element.caption || element.note}"</div>
-            
+            <div>{element.due_by === undefined ? 
+            (
+            // <button 
+            // id={element.payment_id} 
+            // className="likebutton" 
+            // onClick={()=>{this.like(element.payment_id)}}>LIKE</button>
+            null
+            ) 
+            :(<button 
+                id={element.bill_id} 
+                className="paybutton" 
+                onClick={()=>{this.pay(element.bill_id)}}>PAY</button>)}</div>
             </div>
-            {/* <button onClick = {()=>{this.toggleNavbar()}}>HI</button>
-            <Collapse isOpen={!this.state.collapsed} navbar>
-                <div>this is inside</div>
-            </Collapse> */}
-            
             </div>
         })
         return (

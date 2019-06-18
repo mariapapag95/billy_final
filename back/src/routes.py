@@ -2,10 +2,12 @@ from flask import jsonify, request, Flask
 from flask_cors import CORS
 from model import User, Data, all_posts
 from pprint import pprint
+import stripe
 
 app = Flask(__name__)
 cors = CORS(app)
 
+stripe_key = "sk_test_yfIZOXaJC6Vj9oenlnjAO68p00dkYh5GWe"
 
 @app.route('/')
 def API():
@@ -56,6 +58,8 @@ def pay_bill(id_num):
     note = request.json['note']
     bill_id = id_num
     return jsonify(User.pay_bill(amount_paid, paid_by, note, bill_id))
+    
+
 
 # @app.route('/api/bills',methods=['POST'])
 # def bills():

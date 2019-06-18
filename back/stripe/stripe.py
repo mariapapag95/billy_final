@@ -1,15 +1,30 @@
-# import stripe
+import stripe
 
-# alert= ""
-# stripe.api_key = "sk_test_Tjje5lIY8suQe9zd5d3S6xxO001QKSWAU4"
+# Set your secret key: remember to change this to your live secret key in production
+# See your keys here: https://dashboard.stripe.com/account/apikeys
+stripe.api_key = 'sk_test_yfIZOXaJC6Vj9oenlnjAO68p00dkYh5GWe'
 
-# def make_payemnt():
-#     if valid():
-#         try:
-#             customer = stripe.Charge.create(
-#                 amount = 499 # in cents
-#                 currency = "USD"
-#                 description = "email" # filter to clean
-#                 card = "stripe_id" #filter to clean
-#         except stripe.CardError, e:
-#             alert = "The card has been declined"
+payment_method = stripe.PaymentMethod.create(
+    type='card',
+    card={
+        'number': '4242424242424242',
+        'exp_month': 12,
+        'exp_year': 2020,
+        'cvc': '123',
+    },
+)
+
+customer_payment = stripe.PaymentMethod.attach(
+    'pm_card_visa',
+    customer='cus_FHIfU9zlRY92FH'
+)
+
+intent = stripe.PaymentIntent.create(
+    amount=1099,
+    currency='usd',
+    payment_method_types=['card'],
+    payment_method='pm_1Emk4T2eZvKYlo2Cd68RSdIO',
+    confirm=True,
+)
+print("something")
+print(intent)
