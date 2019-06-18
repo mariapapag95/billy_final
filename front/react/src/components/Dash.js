@@ -5,6 +5,7 @@ import UserPage from './UserPage';
 import MakePost from './MakePost';
 import ReactTimeAgo from 'react-time-ago/tooltip'
 import 'react-time-ago/Tooltip.css'
+import '../App.css'
 // import StripeButton from './StripeButton';
 // import CheckoutForm from './CheckoutForm';
 
@@ -16,6 +17,7 @@ export default class Dash extends React.Component {
     this.toggle = this.toggle.bind(this);
     this.state = {
         activeTab: '1',
+        tabColor: "white",
         allPosts: [],
         payForm: false,
         postForm: false,
@@ -77,8 +79,10 @@ export default class Dash extends React.Component {
     toggle(tab) {
         if (this.state.activeTab !== tab) {
             this.setState({
-            activeTab: tab
+            activeTab: tab,
             });
+        console.log(this.state.activeTab !== tab)
+        return this.state.activeTab !== tab
         }
     }
 
@@ -117,12 +121,16 @@ export default class Dash extends React.Component {
         return (
             <div>
                 <div>
-                <Nav tabs>
+                <Nav tabs style={{backgroundColor: 'rgb(207, 68, 43)', 
+                    fontFamily: 'Lucida Console, Monaco, monospace', 
+                    fontStyle : "strong",
+                    fontSize : "large"}}>
                 <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
                 <Collapse isOpen={!this.state.collapsed} navbar></Collapse>
             <NavItem>
             <NavLink
-                className={classnames({ active: this.state.activeTab === '1' })}
+                style = {this.state.activeTab !== '1' ? {color : "white"} : {color : 'rgb(207, 68, 43)'}}
+                className={classnames({ active: this.state.activeTab === '1'})}
                 onClick={() => { this.toggle('1'); }}
                 >
                 BILLY
@@ -130,6 +138,7 @@ export default class Dash extends React.Component {
             </NavItem>
             <NavItem>
             <NavLink
+                style = {this.state.activeTab !== '2' ? {color : "white"} : {color : 'rgb(207, 68, 43)'}}
                 className={classnames({ active: this.state.activeTab === '2' })}
                 onClick={() => { this.toggle('2'); }}
                 >
@@ -138,6 +147,7 @@ export default class Dash extends React.Component {
             </NavItem>
             <NavItem>
             <NavLink
+                style = {this.state.activeTab !== '3' ? {color : "white"} : {color : 'rgb(207, 68, 43)'}}
                 className={classnames({ active: this.state.activeTab === '3' })}
                 onClick={() => { this.toggle('3'); }}
                 >

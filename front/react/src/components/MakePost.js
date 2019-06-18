@@ -37,25 +37,28 @@ export default class MakePost extends React.Component {
 
     render() {
         return (
-            <div className='makepost'>
+            <div className='paycontainer'>
                 <form>
                     <input 
                     className='input'
                     id='totalDue'
                     placeholder='Enter $$$ amount'>
                     </input>
+                    <br/>
                     <input 
                     className='input'
                     id='dueTo'
                     placeholder='company'>
                     </input>
+                    <br/>
                     <input 
                     className='input'
                     id='caption'
                     placeholder='write caption'>
                     </input>
+                    <br/>
                     <button 
-                    className="test"
+                    className="postbillbutton"
                     type="submit"
                     onClick={()=>{this.handleInput()}}>
                     POST

@@ -153,17 +153,19 @@
   color: white;
   border-radius: 20px;
   font-family: "Lucida Console", Monaco, monospace;
+  overflow-wrap: normal;
 }
 
 .space {
   margin-left: 30px;
 }
 
-.input {
-  width: 20%;
-  height: 10%;
+.input_draft {
+  width: 60%;
   border-radius: 5px;
-  margin: 2%;
+  margin-left: 20%;
+  margin-top: 1%;
+  margin-bottom: 1%;
   text-align: center;
 }
 
@@ -200,17 +202,35 @@
   align-items: center;
 }
 
-.test {
+.input {
   border-radius: 10px;
   padding: .5%;
-  background-color:rgb(54, 43, 207);
-  color: white;
-  text-shadow: 2px 2px rgb(54, 43, 207);
+  background-color:white;
+  color: rgba(248,80,50,1);
   font-family: "Lucida Console", Monaco, monospace;
   text-decoration: none;
-  margin-left: 40%; 
+  margin-left: 20%; 
   overflow-wrap: normal;
-  width: 20%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  width: 60%;
+  text-align: center;
+}
+
+.postbillbutton {
+  border-radius: 10px;
+  padding: .5%;
+  background-color:white;
+  color: rgba(248,80,50,1);
+  text-shadow: 1px 1px rgb(207, 68, 43);
+  font-family: "Lucida Console", Monaco, monospace;
+  text-decoration: none;
+  margin-left: 20%; 
+  overflow-wrap: normal;
+  width: 60%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  text-align: center;
 }
 
 .link {
