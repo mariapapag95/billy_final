@@ -9,7 +9,7 @@ import PostPayment from './drafts_trash/PostPayment'
 import ConnectStripe from './ConnectStripe'
 import CardPayment from './CardPayment'
 import LandingPage from './LandingPage';
-import Test from './Test'
+import Test from './drafts_trash/Test'
 
 function Routes () {
     return (

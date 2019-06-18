@@ -6,8 +6,6 @@ import MakePost from './MakePost';
 import ReactTimeAgo from 'react-time-ago/tooltip'
 import 'react-time-ago/Tooltip.css'
 import '../App.css'
-// import StripeButton from './StripeButton';
-// import CheckoutForm from './CheckoutForm';
 
 const url = `http://127.0.0.1:5000/api/`
 
