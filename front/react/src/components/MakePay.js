@@ -1,6 +1,6 @@
 import React from 'react'
 
-const url = `http://127.0.0.1:5000/api/bills/${id}/pay`
+const url = `http://127.0.0.1:5000/api/bills/`
 
 export default class MakePay extends React.Component {
     constructor(props){
@@ -8,7 +8,8 @@ export default class MakePay extends React.Component {
     this.state = {
         amountPaid : '',
         paidBy : 'maria', // hardcoded for now no login
-        note : ''
+        note : '',
+        id : undefined
     }
 }
 
@@ -16,7 +17,7 @@ export default class MakePay extends React.Component {
         let post = {
             'amountPaid': this.state.amountPaid, 
             'note': this.state.note,}
-        fetch (url, {
+        fetch (url + `${this.state.id}/pay`, {
             headers: {"Content-Type" : "application/json"}, 
             body: JSON.stringify(post),
             mode:"cors",
@@ -27,7 +28,8 @@ export default class MakePay extends React.Component {
     handleInput() {
         this.setState({
             amountPaid: document.getElementById('amountPaid').value,
-            note: document.getElementById('note').value
+            note: document.getElementById('note').value,
+            id : document.getElementById('note')
         }, ()=>this.payBill())
     }
 
