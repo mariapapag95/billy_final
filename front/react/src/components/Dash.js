@@ -25,9 +25,9 @@ export default class Dash extends React.Component {
         note: '',
         id: undefined,
         collapsed: true,
-        login : false,
+        login : true,
         email : 'paying.user@example.com',
-        name : undefined,
+        name : "default",
         source : 'tok_visa',
         card : undefined,
         customer : undefined,
@@ -37,6 +37,24 @@ export default class Dash extends React.Component {
         charge : undefined, 
     }
 }
+
+    fetchAll = () => {
+        fetch(url+'all')
+        .then (blob => blob.json()).then(json => {
+            let allPosts = json
+            this.setState({
+                allPosts : allPosts})
+            })
+        .then (
+            fetch ("https://connect.stripe.com/oauth/token")
+        )
+    }
+
+    componentDidMount() {
+        this.fetchAll()
+    }
+
+
 
     createCustomerObject = () => {
         let post = {
@@ -71,21 +89,9 @@ export default class Dash extends React.Component {
         , ()=>this.createCustomerObject())
     }
 
-    fetchAll = () => {
-        fetch(url+'all')
-        .then (blob => blob.json()).then(json => {
-            let allPosts = json
-            this.setState({allPosts : allPosts})
-            })
-        .then (
-            fetch ("https://connect.stripe.com/oauth/token")
-        )
-    }
 
-    componentDidMount() {
-        this.fetchAll()
-    }
 
+// this is the function that fires onclick the pay button from the dashboard
     pay(id) {
         //console.log("pay function fired with this id::", id)
         fetch (url+`bills/${id}`)
@@ -111,41 +117,44 @@ export default class Dash extends React.Component {
             },
             body: JSON.stringify(post)
         }).then (blob => blob.json()).then(json => {
-            let customerObject = json
-            console.log(customerObject['default_source'], customerObject['id'])
-            this.setState({
-                card : customerObject['default_source'],
-                customer : customerObject['id'],
-                })
-        })
-    }
-
-    postPayment() {
-            let post = {
-            'amountPaid': this.state.amountPaid, 
-            'note': this.state.note,}
-        fetch (url+`bills/${this.state.id}/pay`, {
-            headers: {"Content-Type" : "application/json"}, 
-            body: JSON.stringify(post),
-            mode:"cors",
-            method:"post"
-        })
-    }
-
-    retrieveCharge = () => {
-        fetch (stripe + `charge`)
-        .then (blob => blob.json()).then(json => {
             let charge = json
-            console.log(charge)
-            })
+            console.log(charge['id'])
+            this.setState({
+                charge : charge['id'],
+                }, ()=>{this.postPayment()})
+        })
     }
 
-    handleInput() {
+    handleInput(e) {
+        e.preventDefault()
         this.setState({
             amountPaid: document.getElementById('amountPaid').value * 100,
             note: document.getElementById('note').value
         }, ()=>this.stripeCharge())
     }
+
+    // retrieveCharge = () => {
+    //     fetch (stripe + `charge/${this.state.charge}`)
+    //     .then (blob => blob.json()).then(json => {
+    //         let charge = json
+    //         console.log(charge)
+    //         })
+    // }
+
+    // just posts payment to dashboard
+    postPayment() {
+        let post = {
+        'amountPaid': this.state.amountPaid, 
+        'note': this.state.note,}
+        fetch (url+`bills/${this.state.id}/pay`, {
+            headers: {"Content-Type" : "application/json"}, 
+            body: JSON.stringify(post),
+            mode:"cors",
+            method:"post"
+        }).then(window.location.reload())
+    }
+
+
 
     // like(id) {
     //     console.log("LIKE button pressed with this id::", id)
@@ -163,7 +172,6 @@ export default class Dash extends React.Component {
         return string + " paid " + string2
     }
 
-    test = () => {this.handleInput(); this.postPayment()} 
 
     render () {
         let posts = this.state.allPosts.map((element, i) => 
@@ -192,7 +200,7 @@ export default class Dash extends React.Component {
                 payform={this.state.payForm}
                 id = {element.bill_id} 
                 function = {()=>this.pay(element.bill_id)}
-                handleInput = {()=>this.test()}
+                handleInput = {(e)=>this.handleInput(e)}
             />)
             }
             </div>
@@ -263,8 +271,8 @@ export default class Dash extends React.Component {
         </div>}
         return (
             <div>
-        <button className="paybutton" onClick = {()=>this.retrieveCharge()}>
-        console.log charge
+        <button className="paybutton" onClick = {()=>this.createCustomerObject()}>
+        mimics customer sign in for now
         </button>
                 <div>
                 <Nav tabs style={{backgroundColor: 'rgba(248,80,50,1)', 

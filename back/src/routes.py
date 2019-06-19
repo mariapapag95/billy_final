@@ -45,25 +45,32 @@ def get_bill(id_num):
             return jsonify(bill)
 
 @app.route('/api/post', methods=['POST'])
-def post():
+def post_bill():
     total_due = int(request.json['totalDue'])
     due_by = "Maria"
     due_to = request.json['dueTo']
     caption = request.json['caption']
     return jsonify(User.post_bill(total_due, due_by, due_to, caption))
+
+@app.route('/api/stripe/payintent', methods=['POST'])
+def create_pay_intent():
+    data = {
+    'amount': request.json['totalDue'],
+    'currency': 'usd',
+    'payment_method_types[]': 'card',
+    'payment_method': request.json['card'],
+    'customer': request.json['customer'],
+    }
+    print(data)
+    response = requests.post('https://api.stripe.com/v1/payment_intents', data=data, auth=(stripe_key, ''))
+    return jsonify(response.json())
     
 @app.route('/api/bills/<id_num>/pay', methods=['POST'])
 def pay_bill(id_num):
-    amount_paid = int(request.json['amountPaid'])
-    print("\n\n\n")
-    print(amount_paid)
-    print("\n\n\n")
+    amount_paid = int(request.json['amountPaid'])/100
     paid_by = 'Maria'
     note = request.json['note']
     bill_id = id_num
-    print("\n\n\n")
-    print("*******payment of", request.json['amountPaid'], "was posted")
-    print("\n\n\n")
     return jsonify(User.pay_bill(amount_paid, paid_by, note, bill_id))
     
 
@@ -77,23 +84,21 @@ def create_customer():
     response = requests.post('https://api.stripe.com/v1/customers', data=data, auth=(stripe_key, ''))
     return jsonify(response.json())
 
-@app.route('/api/stripe/charge', methods=['GET','POST'])
-def charge():
-    if request.method == 'GET':
-        response = requests.get('https://api.stripe.com/v1/charges/ch_1En3zIArt7H7LNAN1pPuVPLt', auth=(stripe_key, ''))
-        return jsonify(response.json())
-    elif request.method == 'POST':
-        data = {
-        'amount': request.json['amount'],
-        'currency': 'usd',
-        'customer': request.json['customer'],
-        'source': request.json['card']
-        }
-        response = requests.post('https://api.stripe.com/v1/charges', data=data, auth=(stripe_key, ''))
-        print("\n\n\n")
-        print("########payment of", request.json['amount'], "was made")
-        print("\n\n\n")
-        return jsonify(response.json())
+@app.route('/api/stripe/charge/<charge>', methods=['GET'])
+def get_charge(charge):
+    response = requests.get('https://api.stripe.com/v1/charges/' + charge, auth=(stripe_key, ''))
+    return jsonify(response.json())
+
+@app.route('/api/stripe/charge', methods=['POST'])
+def post_charge():
+    data = {
+    'amount': request.json['amount'],
+    'currency': 'usd',
+    'customer': request.json['customer'],
+    'source': request.json['card']
+    }
+    response = requests.post('https://api.stripe.com/v1/charges', data=data, auth=(stripe_key, ''))
+    return jsonify(response.json())
 
 
 # @app.route('/api/stripe/card', methods=['GET','POST'])

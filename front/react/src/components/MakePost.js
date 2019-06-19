@@ -9,7 +9,8 @@ export default class MakePost extends React.Component {
         totalDue : '',
         dueBy : 'Maria', // hardcoded for now no login
         dueTo : '',
-        caption : ''
+        caption : '',
+        card : "tok_visa" // doesn't work
     }
 }
 
@@ -18,7 +19,8 @@ export default class MakePost extends React.Component {
             'totalDue': this.state.totalDue, 
             'dueBy': this.state.dueBy, 
             'dueTo': this.state.dueTo,
-            'caption': this.state.caption,}
+            'caption': this.state.caption,
+            'card': this.state.card}
         fetch (url, {
             headers: {"Content-Type" : "application/json"}, 
             body: JSON.stringify(post),
