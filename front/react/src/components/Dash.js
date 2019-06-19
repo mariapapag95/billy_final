@@ -2,7 +2,7 @@ import React from 'react';
 import { TabContent, TabPane, Nav, NavItem, NavLink, NavbarToggler, Collapse, Navbar } from 'reactstrap';
 import classnames from 'classnames';
 import UserPage from './UserPage';
-import MakePost from './MakePost';
+// import MakePost from './MakePost';
 import ReactTimeAgo from 'react-time-ago/tooltip'
 import 'react-time-ago/Tooltip.css'
 import '../App.css'
@@ -35,8 +35,15 @@ export default class Dash extends React.Component {
         redirect : false, 
         form : true, 
         charge : undefined, 
+        totalDue : undefined,
+        dueBy : 'Maria', // hardcoded for now no login
+        dueTo : undefined,
+        caption : '',
+        payIntent : undefined,
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     fetchAll = () => {
         fetch(url+'all')
@@ -55,7 +62,7 @@ export default class Dash extends React.Component {
     }
 
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     createCustomerObject = () => {
         let post = {
             email : this.state.email,
@@ -88,8 +95,59 @@ export default class Dash extends React.Component {
             }
         , ()=>this.createCustomerObject())
     }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+    stripePayIntent() {
+        let post = {
+            'totalDue' : this.state.totalDue,
+            'card' : this.state.card,
+            'customer': this.state.customer,
+        }
+        fetch (stripe + `payintent`, {
+            method:"POST", 
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(post)
+        }).then (blob => blob.json()).then(json => {
+            let payIntent = json
+            console.log("this is pay intent",payIntent)
+            this.setState({
+                payIntent : payIntent
+                }, ()=>{this.postBill()})
+        })
+    }
+
+    handlePost(e) {
+        e.preventDefault()
+        this.setState({
+            totalDue: document.getElementById('totalDue').value,
+            dueTo: document.getElementById('dueTo').value,
+            caption: document.getElementById('caption').value
+        }, ()=>this.stripePayIntent())
+    }
+
+    postBill() {
+        let post = {
+            'totalDue': this.state.totalDue, 
+            'dueBy': this.state.dueBy, 
+            'dueTo': this.state.dueTo,
+            'caption': this.state.caption,
+            // 'card': this.state.card
+        }
+        fetch (url + `post`, {
+            headers: {"Content-Type" : "application/json"}, 
+            body: JSON.stringify(post),
+            mode:"cors",
+            method:"post"
+        })
+        // .then(window.location.reload())
+    }
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // this is the function that fires onclick the pay button from the dashboard
     pay(id) {
@@ -133,14 +191,6 @@ export default class Dash extends React.Component {
         }, ()=>this.stripeCharge())
     }
 
-    // retrieveCharge = () => {
-    //     fetch (stripe + `charge/${this.state.charge}`)
-    //     .then (blob => blob.json()).then(json => {
-    //         let charge = json
-    //         console.log(charge)
-    //         })
-    // }
-
     // just posts payment to dashboard
     postPayment() {
         let post = {
@@ -154,7 +204,15 @@ export default class Dash extends React.Component {
         }).then(window.location.reload())
     }
 
+    // retrieveCharge = () => {
+    //     fetch (stripe + `charge/${this.state.charge}`)
+    //     .then (blob => blob.json()).then(json => {
+    //         let charge = json
+    //         console.log(charge)
+    //         })
+    // }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // like(id) {
     //     console.log("LIKE button pressed with this id::", id)
@@ -171,6 +229,8 @@ export default class Dash extends React.Component {
     paidFormat(string,string2) {
         return string + " paid " + string2
     }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     render () {
@@ -319,7 +379,35 @@ export default class Dash extends React.Component {
                 <UserPage/>
             </TabPane>
             <TabPane tabId="3">
-                <MakePost/>
+                {/* <MakePost/> */}
+            <div className='paycontainer'>
+                <form>
+                    <input 
+                    className='input'
+                    id='totalDue'
+                    placeholder='Enter $$$ amount'>
+                    </input>
+                    <br/>
+                    <input 
+                    className='input'
+                    id='dueTo'
+                    placeholder='company'>
+                    </input>
+                    <br/>
+                    <input 
+                    className='input'
+                    id='caption'
+                    placeholder='write caption'>
+                    </input>
+                    <br/>
+                    <button 
+                    className="postbillbutton"
+                    type="submit"
+                    onClick={(e)=>{this.handlePost(e)}}>
+                    POST
+                    </button>
+                </form>
+            </div>
             </TabPane>
             </TabContent>
             </div>
