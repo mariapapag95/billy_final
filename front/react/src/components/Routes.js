@@ -9,8 +9,8 @@ import PostPayment from './drafts_trash/PostPayment'
 import ConnectStripe from './ConnectStripe'
 import CardPayment from './CardPayment'
 import LandingPage from './LandingPage';
-import Test from './Test'
 import CreateCustomerObject from './CreateCustomerObject';
+import CardDemo from './Test';
 
 function Routes () {
     return (
@@ -26,7 +26,7 @@ function Routes () {
                 <Route path = '/bills' component = {PostBill}/>
                 <Route path = '/payments' component = {PostPayment}/>
                 <Route path = '/customer' component = {CreateCustomerObject}/>
-                <Route path = '/test' component = {Test}/>
+                <Route path = '/test' component = {CardDemo}/>
             </BrowserRouter>
         </div>
     )

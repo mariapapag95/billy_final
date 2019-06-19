@@ -6,8 +6,10 @@ import MakePost from './MakePost';
 import ReactTimeAgo from 'react-time-ago/tooltip'
 import 'react-time-ago/Tooltip.css'
 import '../App.css'
+import HandlePay from './HandlePay'
 
 const url = `http://127.0.0.1:5000/api/`
+const stripe = `http://127.0.0.1:5000/api/stripe/`
 
 export default class Dash extends React.Component {
     constructor(props){
@@ -22,9 +24,52 @@ export default class Dash extends React.Component {
         amountPaid: undefined,
         note: '',
         id: undefined,
-        collapsed: true
+        collapsed: true,
+        login : false,
+        email : 'paying.user@example.com',
+        name : undefined,
+        source : 'tok_visa',
+        card : undefined,
+        customer : undefined,
+        amount : undefined,
+        redirect : false, 
+        form : true, 
+        charge : undefined, 
     }
 }
+
+    createCustomerObject = () => {
+        let post = {
+            email : this.state.email,
+            name : this.state.name,
+            source : this.state.source
+            }
+        fetch(stripe + `customer`, {
+            method:"POST", 
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(post)
+        })
+        .then (blob => blob.json()).then(json => {
+            let customerObject = json
+            console.log(customerObject['default_source'], customerObject['id'])
+            this.setState({
+                card : customerObject['default_source'],
+                customer : customerObject['id'],
+                })
+        })
+    }
+
+    submit () {
+        this.setState({
+            email : document.getElementById("email").value,
+            name : document.getElementById("first").value + " " + document.getElementById("last").value,
+            login : true
+            }
+        , ()=>this.createCustomerObject())
+    }
 
     fetchAll = () => {
         fetch(url+'all')
@@ -42,16 +87,40 @@ export default class Dash extends React.Component {
     }
 
     pay(id) {
-        console.log("pay function fired with this id::", id)
+        //console.log("pay function fired with this id::", id)
         fetch (url+`bills/${id}`)
         .then (blob => blob.json()).then(json => {
             let bill = json
             this.setState({allPosts : [bill], payForm : true, id : id})
-            console.log("this is BILL in pay(id)", this.state.allPosts)
+            //console.log("this is BILL in pay(id)", this.state.allPosts)
+            //console.log("LOOK AT MEEEEE",this.state.payForm)
         })
     }
         
-    payBill() {
+    stripeCharge() {
+        let post = {
+            "amount" : this.state.amountPaid,
+            'customer': this.state.customer,
+            'card' : this.state.card
+        }
+        fetch (stripe + `charge`, {
+            method:"POST", 
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(post)
+        }).then (blob => blob.json()).then(json => {
+            let customerObject = json
+            console.log(customerObject['default_source'], customerObject['id'])
+            this.setState({
+                card : customerObject['default_source'],
+                customer : customerObject['id'],
+                })
+        })
+    }
+
+    postPayment() {
             let post = {
             'amountPaid': this.state.amountPaid, 
             'note': this.state.note,}
@@ -63,16 +132,24 @@ export default class Dash extends React.Component {
         })
     }
 
-    handleInput() {
-        this.setState({
-            amountPaid: document.getElementById('amountPaid').value,
-            note: document.getElementById('note').value
-        }, ()=>this.payBill())
+    retrieveCharge = () => {
+        fetch (stripe + `charge`)
+        .then (blob => blob.json()).then(json => {
+            let charge = json
+            console.log(charge)
+            })
     }
 
-    like(id) {
-        console.log("LIKE button pressed with this id::", id)
+    handleInput() {
+        this.setState({
+            amountPaid: document.getElementById('amountPaid').value * 100,
+            note: document.getElementById('note').value
+        }, ()=>this.stripeCharge())
     }
+
+    // like(id) {
+    //     console.log("LIKE button pressed with this id::", id)
+    // }
 
     toggle(tab) {
         if (this.state.activeTab !== tab) {
@@ -86,12 +163,15 @@ export default class Dash extends React.Component {
         return string + " paid " + string2
     }
 
-    render () {
+    test = () => {this.handleInput(); this.postPayment()} 
 
-        let posts = this.state.allPosts.map((element, i) => {
-            return <div key={i}>
-            <div className={element.bill_id === undefined ? "paycontainer" : "billcontainer"} >
-            <Navbar>
+    render () {
+        let posts = this.state.allPosts.map((element, i) => 
+        {
+        if (this.state.login)
+            {return <div key={i}>
+                <div className={element.bill_id === undefined ? "paycontainer" : "billcontainer"} >
+                <Navbar>
             {/* <span><div className="icon"></div></span> */}
             <div>{element.due_by === undefined ? this.paidFormat(element.paid_by, element.bill_owner) : element.due_by}</div>
             <div>${element.total_due || element.amount_paid}</div>
@@ -99,23 +179,93 @@ export default class Dash extends React.Component {
             <div className="comment"><ReactTimeAgo date = {element.created_on * 1000} timeStyle = "twitter"/></div>
             </Navbar>
             <div className="comment">"{element.caption || element.note}"</div>
-            <div>{element.due_by === undefined ? 
-            (
-            // <button 
-            // id={element.payment_id} 
-            // className="likebutton" 
-            // onClick={()=>{this.like(element.payment_id)}}>LIKE</button>
-            null
-            ) 
-            :(<button 
-                id={element.bill_id} 
-                className="paybutton" 
-                onClick={()=>{this.pay(element.bill_id)}}>PAY</button>)}</div>
+            <div>
+            {
+            element.due_by === undefined ? 
+            (null) 
+            :
+            // (<button 
+            //     id={element.bill_id} 
+            //     className="paybutton" 
+            //     onClick={()=>{this.pay(element.bill_id)}}>PAY</button>)
+            (<HandlePay 
+                payform={this.state.payForm}
+                id = {element.bill_id} 
+                function = {()=>this.pay(element.bill_id)}
+                handleInput = {()=>this.test()}
+            />)
+            }
             </div>
             </div>
-        })
+            </div>}
+        else {return null}
+        }
+        )
+        if (!this.state.login) { return <div>
+            <form className="billcontainer">
+                <p className="title">PERSONAL INFO</p>
+                <input 
+                    className = "input"
+                    id = "first"
+                    placeholder = "First Name"/>
+                <input 
+                    className = "input"                
+                    id = "last"
+                    placeholder = "Last Name"/>
+                <input 
+                    className = "input"
+                    id = "email"
+                    placeholder = "Email"/>
+                <input 
+                    className = "input"
+                    id = "username"
+                    placeholder = "Username"/>
+                <input 
+                    className = "input"
+                    id = "password"
+                    placeholder = "Password"/>
+                <input 
+                    className = "input"
+                    id = "confirm"
+                    placeholder = "Confirm Password"/>
+                <p className="title">PAYMENT INFO</p>
+                <input
+                    className = "input"
+                    placeholder = "Credit Card"/>
+                <input
+                    className = "input"
+                    placeholder = "Expiry Month"/>
+                <input
+                    className = "input"
+                    placeholder = "Expiry Year"/>
+                <input
+                    className = "input"
+                    placeholder = "CVC"/>
+                <button 
+                    className = "paybutton"
+                    onClick={()=>{this.submit()}}>SUBMIT
+                </button>
+                <button
+                onClick={()=>this.test()}>
+                    TEST
+                </button>
+                {/* <button 
+                    className = "paybutton"
+                    onClick = {()=>{this.signup()}}>
+                    signup SUCESSFUL
+                </button>
+                <button 
+                    className = "paybutton"
+                    onClick = {()=>{this.badsignup()}}>
+                    signup UNSUCESSFUL
+                </button> */}
+            </form>
+        </div>}
         return (
             <div>
+        <button className="paybutton" onClick = {()=>this.retrieveCharge()}>
+        console.log charge
+        </button>
                 <div>
                 <Nav tabs style={{backgroundColor: 'rgba(248,80,50,1)', 
                     fontFamily: 'Lucida Console, Monaco, monospace', 

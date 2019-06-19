@@ -8,7 +8,7 @@ import requests
 app = Flask(__name__)
 cors = CORS(app)
 
-stripe_key = "sk_test_yfIZOXaJC6Vj9oenlnjAO68p00dkYh5GWe"
+stripe_key = "sk_test_Tjje5lIY8suQe9zd5d3S6xxO001QKSWAU4"
 
 @app.route('/')
 def API():
@@ -55,21 +55,66 @@ def post():
 @app.route('/api/bills/<id_num>/pay', methods=['POST'])
 def pay_bill(id_num):
     amount_paid = int(request.json['amountPaid'])
+    print("\n\n\n")
+    print(amount_paid)
+    print("\n\n\n")
     paid_by = 'Maria'
     note = request.json['note']
     bill_id = id_num
+    print("\n\n\n")
+    print("*******payment of", request.json['amountPaid'], "was posted")
+    print("\n\n\n")
     return jsonify(User.pay_bill(amount_paid, paid_by, note, bill_id))
     
 
 @app.route('/api/stripe/customer', methods=['POST'])
 def create_customer():
     data = {
-    'description': request.json['description'],
-    'source': 'tok_amex'}
-    response = requests.post('https://api.stripe.com/v1/customers', data=data, auth=('sk_test_AFKPFfpBFihGghSPpvizoKJW00C5YScapb', ''))
-    print("\n\n\n", response, "\n\n\n")
-    print("\n\n\n", response.json(), "\n\n\n")
+    'name': request.json['name'],
+    'email': request.json['email'],
+    'source': request.json['source']
+    }
+    response = requests.post('https://api.stripe.com/v1/customers', data=data, auth=(stripe_key, ''))
     return jsonify(response.json())
+
+@app.route('/api/stripe/charge', methods=['GET','POST'])
+def charge():
+    if request.method == 'GET':
+        response = requests.get('https://api.stripe.com/v1/charges/ch_1En3zIArt7H7LNAN1pPuVPLt', auth=(stripe_key, ''))
+        return jsonify(response.json())
+    elif request.method == 'POST':
+        data = {
+        'amount': request.json['amount'],
+        'currency': 'usd',
+        'customer': request.json['customer'],
+        'source': request.json['card']
+        }
+        response = requests.post('https://api.stripe.com/v1/charges', data=data, auth=(stripe_key, ''))
+        print("\n\n\n")
+        print("########payment of", request.json['amount'], "was made")
+        print("\n\n\n")
+        return jsonify(response.json())
+
+
+# @app.route('/api/stripe/card', methods=['GET','POST'])
+# def card():
+#     if request.method == 'POST':
+#         data = {
+#         'card[number]': request.json['number'],
+#         'card[exp_month]': request.json['exp_month'],
+#         'card[exp_year]': request.json['exp_year'],
+#         'card[cvc]': request.json['cvc']
+#         }
+#         response = requests.post('https://api.stripe.com/v1/tokens', data=data, auth=('sk_test_AFKPFfpBFihGghSPpvizoKJW00C5YScapb', ''))
+#         return jsonify(response.json())
+#     elif request.method == 'GET':
+#         response = requests.get('https://api.stripe.com/v1/customers/cus_FHdfySlM7e4inM/sources/card_1En4NfArt7H7LNANCgzTcu0o', auth=('sk_test_AFKPFfpBFihGghSPpvizoKJW00C5YScapb', ''))
+#         return jsonify(response.json())
+
+
+
+
+
 
 
 # @app.route('/api/bills',methods=['POST'])
