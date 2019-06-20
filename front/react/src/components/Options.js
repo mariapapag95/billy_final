@@ -25,12 +25,13 @@ export default function Options() {
             aria-controls="panel1a-content"
             id="panel1a-header"
             >
-            <div className="dropdown">USERNAME</div>
+            <div className="dropdown_title">USERNAME</div>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-            <Typography>
+                <button className="dropdown">ADD PAYMENT METHOD</button>
+            </ExpansionPanelDetails>
+            <ExpansionPanelDetails>
                 <button className="dropdown">LOGOUT</button>
-            </Typography>
             </ExpansionPanelDetails>
         </ExpansionPanel>
         </div>

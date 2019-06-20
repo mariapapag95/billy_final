@@ -2,6 +2,7 @@ import React from 'react';
 import { Navbar } from 'reactstrap';
 import ReactTimeAgo from 'react-time-ago/tooltip'
 import Options from './Options'
+import UserIcon from'./UserIcon'
 
 
 const url = `http://127.0.0.1:5000/user`
@@ -67,8 +68,8 @@ export default class UserPage extends React.Component {
         })
             return (
                 <div>
-                    <UserIcon/>
                     <Options/>
+                    <UserIcon user = "photo here"/>
                     {/* <button 
                     className = "logout"
                     onClick= {()=>this.options()}>

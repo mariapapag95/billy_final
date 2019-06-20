@@ -120,13 +120,17 @@
 }
 
 .icon {
-  margin: 2px;
-  padding: 3px;
-  background-color: lightblue;
-  width: 35%;
-  height: 100%;
   color: white;
+  background: red;
+  display: inline-block;
+  width: 20%;
+  height: 0;
+  padding: 10% 0;
   border-radius: 50%;
+  text-align: center;
+  margin-left: 40%;
+  margin-top: 2%;
+  margin-bottom: 2%;
 }
 
 .container {
@@ -197,18 +201,32 @@
   align-items: center;
 }
 
-.dropdown {
+.dropdown_title {
   border-radius: 10px;
-  border: 1px;
-  padding: 1%;
+  border: 0px;
   background-color: white;
   color: rgba(248,80,50,1);
   text-shadow: .5px 1px rgb(207, 68, 43);
   font-family: "Lucida Console", Monaco, monospace;
   text-decoration: none;
-  width: 20%;
-  margin-left: 40%;
+  width: 40%;
+  margin-left: 30%;
   text-align: center;
+}
+
+.dropdown {
+  font-size: smaller;
+  border-radius: 10px;
+  border: 0px;
+  background-color: white;
+  color: rgba(248,80,50,1);
+  text-shadow: .5px 1px rgb(207, 68, 43);
+  font-family: "Lucida Console", Monaco, monospace;
+  text-decoration: none;
+  width: 40%;
+  margin-left: 30%;
+  text-align: center;
+  opacity: 0.7;
 }
 
 .payform {
