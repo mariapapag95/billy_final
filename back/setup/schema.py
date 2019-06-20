@@ -5,9 +5,14 @@ cursor = connection.cursor()
 
 cursor.execute('''CREATE TABLE users(
     user_id INTEGER PRIMARY KEY,
-    username VARCHAR UNIQUE
+    name VARCHAR,
+    username VARCHAR UNIQUE,
+    password VARCHAR,
+    email VARCHAR,
+    stripe_id VARCHAR,
+    default_payment VARCHAR,
+    sources VARCHAR
     );''')
-    # add password
 
 cursor.execute('''CREATE TABLE bills(
     bill_id INTEGER PRIMARY KEY,

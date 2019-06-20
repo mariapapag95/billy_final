@@ -10,7 +10,7 @@ function LandingPage() {
         <NavLink
         style = {{textDecorationSkip: true, color: 'white'}}
         className="landing landing1"
-        href="/signup">
+        href="/username">
         SIGN UP
         </NavLink>
         <NavLink

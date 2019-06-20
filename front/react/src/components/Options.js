@@ -3,16 +3,24 @@ import { makeStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import LandingPage from './LandingPage';
+import { Redirect, Switch } from 'react-router-dom'
+import { NavLink } from 'reactstrap';
+import '../App.css'
 
 const useStyles = makeStyles(theme => ({
     root: {
-        width: '80%',
+        width: '100%',
     },
     heading: {
         fontSize: theme.typography.pxToRem(15),
         fontWeight: theme.typography.fontWeightRegular,
     },
     }));
+
+function logout () {
+    return <LandingPage/>
+}
 
 export default function Options() {
     const classes = useStyles();
@@ -27,10 +35,18 @@ export default function Options() {
             <div className="dropdown_title">USERNAME</div>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-                <button className="dropdown">ADD PAYMENT METHOD</button>
+                <NavLink
+                className="dropdown"
+                href='/addpaymentmethod'
+                >ADD PAYMENT METHOD
+                </NavLink>
             </ExpansionPanelDetails>
             <ExpansionPanelDetails>
-                <button className="dropdown">LOGOUT</button>
+                <button 
+                className="dropdown"
+                onClick={()=>{logout()}}
+                >LOGOUT
+                </button>
             </ExpansionPanelDetails>
         </ExpansionPanel>
         </div>

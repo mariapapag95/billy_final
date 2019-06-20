@@ -29,9 +29,15 @@ export default class Dash extends React.Component {
         note: '',
         id: undefined,
         collapsed: true,
-        login : true,
+        login : false,
+
         email : 'paying.user@example.com',
         name : "default",
+        sources: undefined, 
+        password : undefined,
+        username: undefined,
+        default_payment: undefined,
+
         source : 'tok_visa',
         card : undefined,
         customer : undefined,
@@ -84,17 +90,39 @@ export default class Dash extends React.Component {
         })
         .then (blob => blob.json()).then(json => {
             let customerObject = json
-            console.log(customerObject['default_source'], customerObject['id'])
+            console.log(customerObject)
             this.setState({
                 card : customerObject['default_source'],
                 customer : customerObject['id'],
+                sources : customerObject['sources'],
                 })
+        }).then (()=> this.saveCustomer())
+    }
+
+    saveCustomer = () => {
+        let post = {
+            name : this.state.name, 
+            username : this.state.username,
+            password: this.state.password,
+            customerID : this.state.customer,
+            email : this.state.email,
+            default_payment: this.state.card,
+        }
+        fetch(url + `save_customer`, {
+            method:"POST", 
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(post)
         })
     }
 
     submit () {
         this.setState({
+            password : document.getElementById("password").value,
             email : document.getElementById("email").value,
+            username : document.getElementById("username").value,
             name : document.getElementById("first").value + " " + document.getElementById("last").value,
             login : true
             }

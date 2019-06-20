@@ -254,6 +254,10 @@
   padding-bottom: 0;
 }
 
+.dropdown:hover {
+  color: lightslategray;
+}
+
 .grey {
   font-size: smaller;
   color: lightslategray;

@@ -11,6 +11,7 @@ import CardPayment from './CardPayment'
 import LandingPage from './LandingPage';
 import CreateCustomerObject from './CreateCustomerObject';
 import CardDemo from './Test';
+import AddCard from './AddCard';
 
 function Routes () {
     return (
@@ -27,6 +28,7 @@ function Routes () {
                 <Route path = '/payments' component = {PostPayment}/>
                 <Route path = '/customer' component = {CreateCustomerObject}/>
                 <Route path = '/test' component = {CardDemo}/>
+                <Route path = '/addpaymentmethod' component = {AddCard}/>
             </BrowserRouter>
         </div>
     )

@@ -100,6 +100,29 @@ def post_charge():
     response = requests.post('https://api.stripe.com/v1/charges', data=data, auth=(stripe_key, ''))
     return jsonify(response.json())
 
+@app.route('/api/stripe/addcard', methods=['POST'])
+def add_card():
+    customer = request.json['customer']
+    data = {
+    'source': request.json['source']
+    }
+    response = requests.post('https://api.stripe.com/v1/customers/'+customer+'/sources', data=data, auth=(stripe_key, ''))
+    return jsonify(response.json())
+
+@app.route('/api/stripe/customer/<customer>', methods=['GET'])
+def get_customer(customer):
+    response = requests.get('https://api.stripe.com/v1/customers/'+ customer, auth=(stripe_key, ''))
+    return jsonify(response.json())
+
+@app.route('/api/save_customer', methods=['POST'])
+def save_customer():
+    name = request.json['name']
+    username = request.json['username']
+    password = request.json['password']
+    email = request.json['email']
+    stripe_id = request.json['customerID']
+    default_payment = request.json['default_payment']
+    return jsonify(User.create_customer(name, username, password, email, stripe_id, default_payment))
 
 # @app.route('/api/stripe/card', methods=['GET','POST'])
 # def card():

@@ -30,6 +30,19 @@ class User:
     #             source="tok_visa" # obtained with Stripe.js
     #         )
     #         return [{"user_id":69, "username":"testuser", "password":"testpassword"}]
+    def create_customer(name, username, password, email, stripe_id, default_payment):
+        with Database() as db:
+            db.cursor.execute('''INSERT INTO users (name, username, password, email, stripe_id, default_payment)
+                                VALUES (?, ?, ?, ?, ?, ?);''',
+                                (name, username, password, email, stripe_id, default_payment))
+            user_id = db.cursor.lastrowid
+            keys = ["user_id", "name", "username", "password", 'email', 'stripe_id', 'default_payment']
+            values = [user_id, name, username, password, email, stripe_id, default_payment]
+            user = [dict(zip(keys, values))]
+            print("\n\n\n\n\n")
+            print(user)
+            print("\n\n\n\n\n")
+            return user
 
     def post_bill(total_due, due_by, due_to, caption, due_date):
         created_on = int(time.time())
