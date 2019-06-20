@@ -2,14 +2,17 @@ import React from 'react';
 import { TabContent, TabPane, Nav, NavItem, NavLink, NavbarToggler, Collapse, Navbar } from 'reactstrap';
 import classnames from 'classnames';
 import UserPage from './UserPage';
-// import MakePost from './MakePost';
 import ReactTimeAgo from 'react-time-ago/tooltip'
 import 'react-time-ago/Tooltip.css'
 import '../App.css'
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import HandlePay from './HandlePay'
 
 const url = `http://127.0.0.1:5000/api/`
 const stripe = `http://127.0.0.1:5000/api/stripe/`
+
 
 export default class Dash extends React.Component {
     constructor(props){
@@ -19,6 +22,7 @@ export default class Dash extends React.Component {
         activeTab: '1',
         tabColor: "white",
         allPosts: [],
+        payButton: true,
         payForm: false,
         postForm: false,
         amountPaid: undefined,
@@ -155,13 +159,17 @@ export default class Dash extends React.Component {
 // this is the function that fires onclick the pay button from the dashboard
     pay(id) {
         //console.log("pay function fired with this id::", id)
-        fetch (url+`bills/${id}`)
-        .then (blob => blob.json()).then(json => {
-            let bill = json
-            this.setState({allPosts : [bill], payForm : true, id : id})
+        // fetch (url+`bills/${id}`)
+        // .then (blob => blob.json()).then(json => {
+        //     let bill = json
+            this.toggleClass()
+            this.setState({
+                // allPosts : [bill], 
+                payForm : true, 
+                id : id})
             //console.log("this is BILL in pay(id)", this.state.allPosts)
             //console.log("LOOK AT MEEEEE",this.state.payForm)
-        })
+        // })
     }
         
     stripeCharge() {
@@ -229,6 +237,11 @@ export default class Dash extends React.Component {
         }
     }
 
+    toggleClass() {
+        const currentState = this.state.payButton;
+        this.setState({ payButton: !currentState });
+    };
+
     paidFormat(string,string2) {
         return string + " paid " + string2
     }
@@ -259,12 +272,37 @@ export default class Dash extends React.Component {
             //     id={element.bill_id} 
             //     className="paybutton" 
             //     onClick={()=>{this.pay(element.bill_id)}}>PAY</button>)
-            (<HandlePay 
+
+
+            // (<HandlePay 
+            //     payform={this.state.payForm}
+            //     id = {element.bill_id} 
+            //     function = {()=>this.pay(element.bill_id)}
+            //     handleInput = {(e)=>this.handleInput(e)}
+            // />)
+            
+            (<div>
+            <button className="width" onClick={()=>this.pay(element.bill_id)}><ExpansionPanel className='dropdown_container'>
+            <ExpansionPanelSummary
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+            >
+            <div className="dropdown_title">
+            {this.state.payButton ? 'PAY': <div className="grey">CANCEL</div>} 
+            </div>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+            <HandlePay 
                 payform={this.state.payForm}
                 id = {element.bill_id} 
                 function = {()=>this.pay(element.bill_id)}
                 handleInput = {(e)=>this.handleInput(e)}
-            />)
+            />
+            </ExpansionPanelDetails>
+            </ExpansionPanel></button>
+            </div>)
+
+
             }
             </div>
             </div>

@@ -4,31 +4,30 @@ function HandlePay (props) {
     if (!props.payform) {
         return <button 
             id={props.id} 
-            className="paybutton" 
+            className="dropdown" 
             onClick={props.function}>PAY</button>
     } else {
-        return <div className='payform'>
+        return <div className='dropdown'>
         <form>
             <div>
             <input 
-            className='input'
+            className='dropdowninputamount'
             id='amountPaid'
-            placeholder='Enter $ amount'>
-            </input>
+            placeholder='$'
+            />
             </div>
             <div>
             <input 
-            className='input'
+            className='dropdowninput'
             id='note'
-            placeholder='add note'>
-            </input>
+            placeholder='add note'/>
             </div>
             <div>
             <button 
-            className="likebutton"
+            className="confirmpaybutton"
             type="submit"
             onClick={props.handleInput}>
-            PAY
+            CONFIRM
             </button>
             </div>
         </form>
