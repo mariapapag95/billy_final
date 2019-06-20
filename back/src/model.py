@@ -31,17 +31,16 @@ class User:
     #         )
     #         return [{"user_id":69, "username":"testuser", "password":"testpassword"}]
 
-    def post_bill(total_due, due_by, due_to, caption):
-        # add "due_by" as arguement and set self.username after login functionality has been made
+    def post_bill(total_due, due_by, due_to, caption, due_date):
         created_on = int(time.time())
         #created_on = created_on.strftime("%c")
-        keys = ["bill_id","total_due","due_by", "due_to", "created_on", "caption"]
+        keys = ["bill_id","total_due","due_by", "due_to", "created_on", "caption", "due_date"]
         with Database() as db: 
-            db.cursor.execute('''INSERT INTO bills (total_due, due_by, due_to, created_on, caption)
-                                VALUES (?, ?, ?, ?, ?);''',
-                                (total_due, due_by, due_to, created_on, caption))
+            db.cursor.execute('''INSERT INTO bills (total_due, due_by, due_to, created_on, caption, due_date)
+                                VALUES (?, ?, ?, ?, ?, ?);''',
+                                (total_due, due_by, due_to, created_on, caption, due_date))
             bill_id = db.cursor.lastrowid
-            values = [bill_id, total_due, due_by, due_to, created_on, caption]
+            values = [bill_id, total_due, due_by, due_to, created_on, caption, due_date]
             bill = [dict(zip(keys, values))]
             return bill
         
@@ -79,12 +78,13 @@ class User:
 class Data:
 
     def all_bills():
-        keys = ["bill_id","total_due","due_by", "due_to", "created_on", "caption", "contributors"]
+        keys = ["bill_id","total_due","due_by", "due_to", "created_on", "caption", "due_date", "contributors"]
         with Database() as db:
             db.cursor.execute('''SELECT * FROM bills
                                     ORDER BY created_on DESC;''')
             all_bills = db.cursor.fetchall()
             bills = [dict(zip(keys,i)) for i in all_bills]
+            print(bills)
             return bills
 
     def all_payments():
@@ -97,7 +97,7 @@ class Data:
             return payments
 
     def user_page(username):
-        bill_keys = ["bill_id","total_due","due_by", "due_to", "created_on", "caption", "contributors"]
+        bill_keys = ["bill_id","total_due","due_by", "due_to", "created_on", "caption", "due_date", "contributors"]
         pay_keys = ["payment_id", "amount_paid", "paid_by", "paid_to", "created_on", "note", "bill_owner"]
         with Database() as db:
             # db.cursor.execute('''SELECT * FROM bills WHERE due_by='{username}' 

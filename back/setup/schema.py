@@ -16,6 +16,7 @@ cursor.execute('''CREATE TABLE bills(
     due_to VARCHAR,
     created_on INTEGER,
     caption VARCHAR, 
+    due_date VARCHAR,
     contributors VARCHAR,
     FOREIGN KEY (due_by, contributors) REFERENCES users(username, username)
     );''')    

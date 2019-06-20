@@ -38,6 +38,7 @@ export default class Dash extends React.Component {
         totalDue : undefined,
         dueBy : 'Maria', // hardcoded for now no login
         dueTo : undefined,
+        dueDate : undefined,
         caption : '',
         payIntent : undefined,
     }
@@ -125,7 +126,8 @@ export default class Dash extends React.Component {
         this.setState({
             totalDue: document.getElementById('totalDue').value,
             dueTo: document.getElementById('dueTo').value,
-            caption: document.getElementById('caption').value
+            caption: document.getElementById('caption').value,
+            dueDate: document.getElementById('dueDate').value,
         }, ()=>this.stripePayIntent())
     }
 
@@ -135,6 +137,7 @@ export default class Dash extends React.Component {
             'dueBy': this.state.dueBy, 
             'dueTo': this.state.dueTo,
             'caption': this.state.caption,
+            'dueDate': this.state.dueDate,
             // 'card': this.state.card
         }
         fetch (url + `post`, {
@@ -143,7 +146,7 @@ export default class Dash extends React.Component {
             mode:"cors",
             method:"post"
         })
-        // .then(window.location.reload())
+        .then(window.location.reload())
     }
 
 
@@ -244,9 +247,9 @@ export default class Dash extends React.Component {
             <div>{element.due_by === undefined ? this.paidFormat(element.paid_by, element.bill_owner) : element.due_by}</div>
             <div>${element.total_due || element.amount_paid}</div>
             <div>{element.due_to || element.paid_to}</div>
-            <div className="comment"><ReactTimeAgo date = {element.created_on * 1000} timeStyle = "twitter"/></div>
+            <div>{element.due_date ? (<div>Due on {element.due_date}</div>) : (<div className="comment"><ReactTimeAgo date = {element.created_on * 1000} timeStyle = "twitter"/></div>)}</div>
             </Navbar>
-            <div className="comment">"{element.caption || element.note}"</div>
+            <div className="comment">{element.caption || element.note}</div>
             <div>
             {
             element.due_by === undefined ? 
@@ -385,19 +388,25 @@ export default class Dash extends React.Component {
                     <input 
                     className='input'
                     id='totalDue'
-                    placeholder='Enter $$$ amount'>
+                    placeholder='Enter Bill Amount'>
                     </input>
                     <br/>
                     <input 
                     className='input'
                     id='dueTo'
-                    placeholder='company'>
+                    placeholder='Company'>
+                    </input>
+                    <br/>
+                    <input 
+                    className='input'
+                    id='dueDate'
+                    placeholder='Due Date'>
                     </input>
                     <br/>
                     <input 
                     className='input'
                     id='caption'
-                    placeholder='write caption'>
+                    placeholder='Caption (Optional)'>
                     </input>
                     <br/>
                     <button 

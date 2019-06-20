@@ -50,7 +50,8 @@ def post_bill():
     due_by = "Maria"
     due_to = request.json['dueTo']
     caption = request.json['caption']
-    return jsonify(User.post_bill(total_due, due_by, due_to, caption))
+    due_date  = request.json['dueDate']
+    return jsonify(User.post_bill(total_due, due_by, due_to, caption, due_date))
 
 @app.route('/api/stripe/payintent', methods=['POST'])
 def create_pay_intent():
@@ -61,7 +62,6 @@ def create_pay_intent():
     'payment_method': request.json['card'],
     'customer': request.json['customer'],
     }
-    print(data)
     response = requests.post('https://api.stripe.com/v1/payment_intents', data=data, auth=(stripe_key, ''))
     return jsonify(response.json())
     

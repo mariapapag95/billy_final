@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navbar } from 'reactstrap';
 import ReactTimeAgo from 'react-time-ago/tooltip'
+import Options from './Options'
 
 
 const url = `http://127.0.0.1:5000/user`
@@ -8,8 +9,10 @@ const url = `http://127.0.0.1:5000/user`
 export default class UserPage extends React.Component {
     constructor(props){
     super(props)
+    this.toggle = this.toggle.bind(this);
     this.state = {
         allPosts: [],
+        dropdownOpen: false,
     }
 }
 
@@ -28,7 +31,13 @@ export default class UserPage extends React.Component {
     paidFormat(string,string2) {
         return string + " paid " + string2
     }
-
+    
+    toggle() {
+        this.setState(prevState => ({
+            dropdownOpen: !prevState.dropdownOpen
+        }));
+    }
+    
     render () {
         let posts = this.state.allPosts.map((element, i) => {
             return <div key={i}>
@@ -41,7 +50,7 @@ export default class UserPage extends React.Component {
             <div className="comment"><ReactTimeAgo date = {element.created_on * 1000} timeStyle = "twitter"/></div>
             </Navbar>
             <div className="comment">"{element.caption || element.note}"</div>
-            <div>{element.due_by === undefined ? 
+            {/* <div>{element.due_by === undefined ? 
             (
             // <button 
             // id={element.payment_id} 
@@ -52,12 +61,19 @@ export default class UserPage extends React.Component {
             :(<button 
                 id={element.bill_id} 
                 className="paybutton" 
-                onClick={()=>{this.pay(element.bill_id)}}>PAY</button>)}</div>
+                onClick={()=>{this.pay(element.bill_id)}}>PAY</button>)}</div> */}
             </div>
             </div>
         })
             return (
                 <div>
+                    <UserIcon/>
+                    <Options/>
+                    {/* <button 
+                    className = "logout"
+                    onClick= {()=>this.options()}>
+                    OPTIONS
+                    </button> */}
                     <div>{posts}</div>
                 </div>
             )
