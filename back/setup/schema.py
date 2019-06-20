@@ -6,7 +6,7 @@ cursor = connection.cursor()
 cursor.execute('''CREATE TABLE users(
     user_id INTEGER PRIMARY KEY,
     name VARCHAR,
-    username VARCHAR UNIQUE,
+    username VARCHAR,
     password VARCHAR,
     email VARCHAR,
     stripe_id VARCHAR,

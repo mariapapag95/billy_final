@@ -284,6 +284,17 @@ export default class Dash extends React.Component {
         return "$"+string
     }
 
+    test () {
+        this.setState({
+            password : 'pass',
+            email : 'example@google.com',
+            username : 'New',
+            name : 'Maria Papageorgiou',
+            login : true
+            }
+        , ()=>this.createCustomerObject())
+    }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
