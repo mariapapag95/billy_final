@@ -34,7 +34,9 @@ cursor.execute('''CREATE TABLE payments(
     created_on INTEGER,
     note VARCHAR,
     bill_owner VARCHAR,
+    original_bill_id INTEGER,
     FOREIGN KEY (paid_by, bill_owner) REFERENCES users(username, username)
+    FOREIGN KEY (original_bill_id) REFERENCES bills(bill_id)
 );''')
 
 

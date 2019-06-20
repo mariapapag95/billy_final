@@ -30,6 +30,13 @@ class User:
     #             source="tok_visa" # obtained with Stripe.js
     #         )
     #         return [{"user_id":69, "username":"testuser", "password":"testpassword"}]
+
+    def user(username):
+        with Database() as db:
+            db.cursor.execute('''SELECT * FROM users WHERE user_id = ?''', (username))
+            userlist = db.cursor.fetchall()[0]
+            return userlist
+
     def create_customer(name, username, password, email, stripe_id, default_payment):
         with Database() as db:
             db.cursor.execute('''INSERT INTO users (name, username, password, email, stripe_id, default_payment)
@@ -39,9 +46,6 @@ class User:
             keys = ["user_id", "name", "username", "password", 'email', 'stripe_id', 'default_payment']
             values = [user_id, name, username, password, email, stripe_id, default_payment]
             user = [dict(zip(keys, values))]
-            print("\n\n\n\n\n")
-            print(user)
-            print("\n\n\n\n\n")
             return user
 
     def post_bill(total_due, due_by, due_to, caption, due_date):
@@ -82,7 +86,6 @@ class User:
             db.cursor.execute('''UPDATE bills SET contributors = ? WHERE bill_id = ?''', (contributors, bill_id))
             db.cursor.execute('''SELECT * FROM bills WHERE bill_id = ?''', (bill_id))
             updated_bill = db.cursor.fetchall()
-            print(updated_bill)
             values = [payment_id, amount_paid, paid_by, paid_to, created_on, note, bill_owner]
             payment = [dict(zip(keys, values))]
             return payment

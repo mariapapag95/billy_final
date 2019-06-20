@@ -14,6 +14,7 @@ export default class UserPage extends React.Component {
     this.state = {
         allPosts: [],
         dropdownOpen: false,
+        refresh: false,
     }
 }
 
@@ -51,6 +52,8 @@ export default class UserPage extends React.Component {
             <div className="comment"><ReactTimeAgo date = {element.created_on * 1000} timeStyle = "twitter"/></div>
             </Navbar>
             <div className="comment">"{element.caption || element.note}"</div>
+            <br/>
+            <div> </div>
             {/* <div>{element.due_by === undefined ? 
             (
             // <button 
@@ -69,7 +72,7 @@ export default class UserPage extends React.Component {
             return (
                 <div>
                     <Options/>
-                    <UserIcon user = "photo here"/>
+                    <UserIcon/>
                     {/* <button 
                     className = "logout"
                     onClick= {()=>this.options()}>

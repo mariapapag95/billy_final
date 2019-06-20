@@ -114,7 +114,7 @@ def get_customer(customer):
     response = requests.get('https://api.stripe.com/v1/customers/'+ customer, auth=(stripe_key, ''))
     return jsonify(response.json())
 
-@app.route('/api/save_customer', methods=['POST'])
+@app.route('/api/customer', methods=['POST'])
 def save_customer():
     name = request.json['name']
     username = request.json['username']
@@ -123,6 +123,11 @@ def save_customer():
     stripe_id = request.json['customerID']
     default_payment = request.json['default_payment']
     return jsonify(User.create_customer(name, username, password, email, stripe_id, default_payment))
+
+@app.route('/api/customer/<username>', methods=['GET'])
+def api_customer(username):
+    return jsonify(User.user(username))
+
 
 # @app.route('/api/stripe/card', methods=['GET','POST'])
 # def card():

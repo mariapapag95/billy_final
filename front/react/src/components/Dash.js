@@ -29,7 +29,7 @@ export default class Dash extends React.Component {
         note: '',
         id: undefined,
         collapsed: true,
-        login : false,
+        login : true,
 
         email : 'paying.user@example.com',
         name : "default",
@@ -37,6 +37,7 @@ export default class Dash extends React.Component {
         password : undefined,
         username: undefined,
         default_payment: undefined,
+        description: undefined,
 
         source : 'tok_visa',
         card : undefined,
@@ -51,6 +52,8 @@ export default class Dash extends React.Component {
         dueDate : undefined,
         caption : '',
         payIntent : undefined,
+
+        refresh : false,
     }
 }
 
@@ -72,13 +75,13 @@ export default class Dash extends React.Component {
         this.fetchAll()
     }
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     createCustomerObject = () => {
         let post = {
             email : this.state.email,
             name : this.state.name,
-            source : this.state.source
+            source : this.state.source,
+            description : this.state.username,
             }
         fetch(stripe + `customer`, {
             method:"POST", 
@@ -95,8 +98,11 @@ export default class Dash extends React.Component {
                 card : customerObject['default_source'],
                 customer : customerObject['id'],
                 sources : customerObject['sources'],
+                description : customerObject['description'],
                 })
-        }).then (()=> this.saveCustomer())
+        window.sessionStorage.setItem('customer', this.state.customer)
+        window.sessionStorage.setItem('username', this.state.description)
+        }).then (()=> this.saveCustomer()).then(this.setState({refresh:true}))
     }
 
     saveCustomer = () => {
@@ -104,11 +110,11 @@ export default class Dash extends React.Component {
             name : this.state.name, 
             username : this.state.username,
             password: this.state.password,
-            customerID : this.state.customer,
+            customerID: this.state.customer,
             email : this.state.email,
             default_payment: this.state.card,
         }
-        fetch(url + `save_customer`, {
+        fetch(url + `customer`, {
             method:"POST", 
             headers: {
                 'Accept': 'application/json',
@@ -270,8 +276,12 @@ export default class Dash extends React.Component {
         this.setState({ payButton: !currentState });
     };
 
-    paidFormat(string,string2) {
-        return string + " paid " + string2
+    paidFormat(string,string2, string3, string4) {
+        return string + " paid " + string2 + ' $' + string4 + ' for ' + string3 
+    }
+
+    money(string) {
+        return "$"+string
     }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -285,12 +295,13 @@ export default class Dash extends React.Component {
                 <div className={element.bill_id === undefined ? "paycontainer" : "billcontainer"} >
                 <Navbar>
             {/* <span><div className="icon"></div></span> */}
-            <div>{element.due_by === undefined ? this.paidFormat(element.paid_by, element.bill_owner) : element.due_by}</div>
-            <div>${element.total_due || element.amount_paid}</div>
-            <div>{element.due_to || element.paid_to}</div>
-            <div>{element.due_date ? (<div>Due on {element.due_date}</div>) : (<div className="comment"><ReactTimeAgo date = {element.created_on * 1000} timeStyle = "twitter"/></div>)}</div>
+            <div classname='ower'>{element.due_by === undefined ? this.paidFormat(element.paid_by, element.paid_to, element.bill_owner, element.amount_paid) : element.due_by}</div>
+            <div className='amount'>{element.total_due ? (this.money(element.total_due)) : null}</div>
+            <div className='company'>{element.due_to || null}</div>
+            <div>{element.due_date ? (null) : (<div className="comment"><ReactTimeAgo date = {element.created_on * 1000} timeStyle = "twitter"/></div>)}</div>
             </Navbar>
             <div className="comment">{element.caption || element.note}</div>
+            <div className={element.bill_id === undefined ? "paycontainer" : "due"}>{element.due_date ? (<div>Due on {element.due_date}</div>) : (null)}</div>
             <div>
             {
             element.due_by === undefined ? 
@@ -358,11 +369,13 @@ export default class Dash extends React.Component {
                     id = "username"
                     placeholder = "Username"/>
                 <input 
+                    type = 'password'
                     className = "input"
                     id = "password"
                     placeholder = "Password"/>
                 <input 
                     className = "input"
+                    type = 'password'
                     id = "confirm"
                     placeholder = "Confirm Password"/>
                 <p className="title">PAYMENT INFO</p>
@@ -377,6 +390,7 @@ export default class Dash extends React.Component {
                     placeholder = "Expiry Year"/>
                 <input
                     className = "input"
+                    type = 'password'
                     placeholder = "CVC"/>
                 <button 
                     className = "paybutton"

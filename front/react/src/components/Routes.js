@@ -2,7 +2,7 @@ import React from 'react'
 import {Route, BrowserRouter} from 'react-router-dom';
 import Dash from './Dash'
 import Login from './Login'
-import Signup from './Signup';
+import Signup from './drafts_trash/Signup';
 import UserPage from './UserPage'
 import PostBill from './drafts_trash/PostBill'
 import PostPayment from './drafts_trash/PostPayment'

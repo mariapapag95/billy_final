@@ -122,6 +122,8 @@
 .icon {
   color: white;
   background: red;
+  background-image: url(https://avatars0.githubusercontent.com/u/47039896?s=460&v=4);
+  background-size: cover;
   display: inline-block;
   width: 20%;
   height: 0;
@@ -138,7 +140,20 @@
   background-color: lightgoldenrodyellow;
 }
 
+.ower {
+  text-align: right;
+}
+
+.company {
+  text-align: left; 
+}
+
+.due {
+  text-align:center;
+}
+
 .paycontainer {
+  font-size: smaller;
   width: 80%;
   margin: auto;
   margin-top: 1%; 
@@ -150,6 +165,7 @@
 }
 
 .billcontainer {
+  font-size: 80%;
   width: 80%;
   margin: auto;
   margin-top: 1%; 
@@ -178,6 +194,8 @@
   opacity: 0.7;
   text-align: center;
   margin-bottom: 2%;
+  margin-left: 2%;
+  margin-right: 2%;
 }
 
 .title {
