@@ -1,18 +1,19 @@
+@import url('https://fonts.googleapis.com/css?family=Comfortaa');
+
 .logo {
-  font-family: "Lucida Console", Monaco, monospace;
+  font-family: Comfortaa;
   letter-spacing: 8px;
   margin-left: 40px;
 }
 
 .biglogo {
   color: white;
-  font-size: 1000%;
-  font-family: "Lucida Console", Monaco, monospace;
+  font-size: 500%;
+  font-family: Comfortaa;
   letter-spacing: 20px;
   text-align: center;
-  position: fixed;
-  margin-top: 7%;
-  transition-duration: 4s;
+  margin-top: 40%;
+  transition-duration: 2s;
 }
 
 .biglogo:hover {
@@ -26,7 +27,7 @@
   transition-duration: 2s;
 }
 
-.money {
+/* .money {
   background: url(https://data.whicdn.com/images/62593788/original.gif) no-repeat center center fixed;
   background-size: cover;
   height: 100%;
@@ -36,19 +37,17 @@
   color:transparent;
   font-size: 300px;
   text-align: center;
-}
+} */
 
 .about {
   color: white;
-  font-family: "Lucida Console", Monaco, monospace;
+  font-family: Comfortaa;
   letter-spacing: 1px;
   text-align: center;
   font-size: 20px;
 }
 
 .background {
-  display: flex;
-  flex-direction: row;
   background: rgba(248,80,50,1);
   background: -moz-linear-gradient(top, rgba(248,80,50,1) 0%, rgba(242,105,84,1) 29%, rgba(241,111,92,1) 36%, rgba(246,41,12,1) 64%, rgba(242,45,19,1) 76%, rgba(240,47,23,1) 84%, rgba(231,56,39,1) 100%);
   background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(248,80,50,1)), color-stop(29%, rgba(242,105,84,1)), color-stop(36%, rgba(241,111,92,1)), color-stop(64%, rgba(246,41,12,1)), color-stop(76%, rgba(242,45,19,1)), color-stop(84%, rgba(240,47,23,1)), color-stop(100%, rgba(231,56,39,1)));
@@ -57,38 +56,29 @@
   background: -ms-linear-gradient(top, rgba(248,80,50,1) 0%, rgba(242,105,84,1) 29%, rgba(241,111,92,1) 36%, rgba(246,41,12,1) 64%, rgba(242,45,19,1) 76%, rgba(240,47,23,1) 84%, rgba(231,56,39,1) 100%);
   background: linear-gradient(to bottom, rgba(248,80,50,1) 0%, rgba(242,105,84,1) 29%, rgba(241,111,92,1) 36%, rgba(246,41,12,1) 64%, rgba(242,45,19,1) 76%, rgba(240,47,23,1) 84%, rgba(231,56,39,1) 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f85032', endColorstr='#e73827', GradientType=0 );
-  background-size: 100% 100%;
+  background-size: cover;
   height: 1200px;
   justify-content: center;
+  position: fixed;
 }
 
 .landing {
   transition-duration: .8s; 
-  text-align: center;
-  align-items: center;
   color: white;
   text-shadow: 2px 2px rgb(207, 68, 43);
-  font-family: "Lucida Console", Monaco, monospace;
+  font-family: Comfortaa;
   text-decoration: none;
   background-color: transparent;
-  justify-content: space-evenly;
-  margin-left: 20%;
-  margin-right: 20%;
 }
 
-.landing1 {
-  position: fixed;
-  bottom: 20%;
-  right: 0;
-  font-size: 400%;
+.logintext {
+  text-decoration: none;
+  font-size: 200%;
+  text-align: center;
+  margin:auto;
+  color: white;
 }
 
-.landing2 {
-  position: fixed;
-  bottom: 20%;
-  left: 0;
-  font-size: 400%;
-}
 
 .landing:hover {
   text-shadow: 8px 2px rgb(207, 68, 43);
@@ -108,7 +98,7 @@
 .post:hover {
   box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.2);
 }
-
+/* 
 .post {
   background-color: lightgray;
   margin: auto;
@@ -117,7 +107,7 @@
   margin-bottom: 7px; 
   width: 50%;
   height: 80px;
-}
+} */
 
 .icon {
   color: white;
@@ -131,8 +121,8 @@
   border-radius: 50%;
   text-align: center;
   margin-left: 40%;
-  margin-top: 2%;
-  margin-bottom: 2%;
+  margin-top: 4%;
+  margin-bottom: 0%;
 }
 
 .container {
@@ -141,11 +131,12 @@
 }
 
 .ower {
-  text-align: right;
+  text-align: left;
 }
 
-.company {
-  text-align: left; 
+.time {
+  text-align: right;
+  opacity: 0.8; 
 }
 
 .due {
@@ -153,19 +144,19 @@
 }
 
 .paycontainer {
-  font-size: 80%;
+  font-size: 100%;
   width: 80%;
   margin: auto;
   margin-top: 1%; 
   padding: 1%;
-  background-color: rgb(56, 56, 56);
+  background-color:rgba(248,80,50,1);
   color: white;
   border-radius: 5px;
-  font-family: "Lucida Console", Monaco, monospace;
+  font-family: Comfortaa;
 }
 
 .billcontainer {
-  font-size: 90%;
+  font-size: 100%;
   width: 80%;
   margin: auto;
   margin-top: 1%; 
@@ -173,7 +164,7 @@
   background-color: rgba(248,80,50,1);
   color: white;
   border-radius: 5px;
-  font-family: "Lucida Console", Monaco, monospace;
+  font-family: Comfortaa;
   overflow-wrap: normal;
 }
 
@@ -193,16 +184,25 @@
 .comment {
   opacity: 0.7;
   text-align: center;
-  margin-bottom: 2%;
   margin-left: 2%;
   margin-right: 2%;
 }
+
+.contributors {
+  opacity: 0.7;
+  text-align: right;
+  margin-bottom: 2%;
+  margin-left: 2%;
+  margin-right: 2%;
+  padding: 2%;
+}
+
 
 .title {
   color: white;
   margin: auto;
   text-align: center;
-  font-family: "Lucida Console", Monaco, monospace;
+  font-family: Comfortaa;
   font-weight: bold;
 }
 
@@ -210,10 +210,10 @@
   border-radius: 5px;
   border: 1px;
   padding: 1%;
-  background-color: rgb(56, 56, 56);
+  background-color:rgba(248,80,50,1);
   color: white;
   text-shadow: 2px 2px rgb(207, 68, 43);
-  font-family: "Lucida Console", Monaco, monospace;
+  font-family: Comfortaa;
   text-decoration: none;
   width: 96.5%;
   margin: 2%;
@@ -224,10 +224,10 @@
   border-radius: 2px;
   border: 1px;
   padding: 1%;
-  background-color: rgb(56, 56, 56);
+  background-color:rgba(248,80,50,1);
   color: white;
   text-shadow: 1px 1px rgb(207, 68, 43);
-  font-family: "Lucida Console", Monaco, monospace;
+  font-family: Comfortaa;
   text-decoration: none;
   width: 100%;
   align-items: center;
@@ -244,16 +244,34 @@
   border: 4px solid rgba(248,80,50,1);
 }
 
+.dropdown_container {
+  width: 100%;
+  border-radius: 5px;
+  margin:auto;
+}
+
 .dropdown_title {
   border: 0px;
   background-color: white;
   color: rgba(248,80,50,1);
   text-shadow: .5px 1px rgb(207, 68, 43);
-  font-family: "Lucida Console", Monaco, monospace;
+  font-family: Comfortaa;
   text-decoration: none;
   width: 40%;
   margin-left: 30%;
   text-align: center;
+  border-radius: 5px;
+}
+
+.dropdown_title_wide {
+  border: 0px;
+  background-color:rgba(248,80,50,1);
+  color: white;
+  font-family: Comfortaa;
+  text-decoration: none;
+  width: 100%;
+  text-align: right;
+  padding-right: 10px;
   border-radius: 5px;
 }
 
@@ -264,7 +282,7 @@
   background-color: white;
   color: rgba(248,80,50,1);
   text-shadow: .5px 1px rgb(207, 68, 43);
-  font-family: "Lucida Console", Monaco, monospace;
+  font-family: Comfortaa;
   text-decoration: none;
   width: 80%;
   margin-left: 10%;
@@ -276,10 +294,16 @@
   color: lightslategray;
 }
 
+.center{
+  margin-bottom:0;
+  padding-bottom:0;
+  margin-top:5%;
+}
+
 .grey {
   font-size: smaller;
   color: lightslategray;
-  font-family: "Lucida Console", Monaco, monospace;
+  font-family: Comfortaa;
   opacity: 0.8;
 }
 
@@ -294,8 +318,8 @@
   padding: 1%;
   background-color: rgba(248,80,50,1);
   color: white;
-  text-shadow: 2px 2px rgb(56, 56, 56);
-  font-family: "Lucida Console", Monaco, monospace;
+  text-shadow: 2px 2px rgba(248,80,50,1);
+  font-family: Comfortaa;
   text-decoration: none;
   margin: 2%;
   width: 60%;
@@ -309,8 +333,8 @@
   padding: 1%;
   background-color: rgba(248,80,50,1);
   color: white;
-  text-shadow: 2px 2px rgb(56, 56, 56);
-  font-family: "Lucida Console", Monaco, monospace;
+  text-shadow: 2px 2px rgba(248,80,50,1);
+  font-family: Comfortaa;
   text-decoration: none;
   margin: 2%;
   width: 80%;
@@ -320,10 +344,11 @@
 
 .input {
   border-radius: 2px;
+  border:0;
   padding: .5%;
   background-color:white;
   color: rgba(248,80,50,1);
-  font-family: "Lucida Console", Monaco, monospace;
+  font-family: Comfortaa;
   text-decoration: none;
   margin-left: 20%; 
   overflow-wrap: normal;
@@ -338,7 +363,7 @@
   border-radius: 2px;
   padding: 1%;
   color: rgba(248,80,50,1);
-  font-family: "Lucida Console", Monaco, monospace;
+  font-family: Comfortaa;
   text-decoration: none;
   margin-top: 3%;
   margin-bottom: 3%;
@@ -351,7 +376,7 @@
   border-radius: 2px;
   padding: .5%;
   color: rgba(248,80,50,1);
-  font-family: "Lucida Console", Monaco, monospace;
+  font-family: Comfortaa;
   text-decoration: none;
   overflow-wrap: normal;
   margin-top: 1%;
@@ -368,25 +393,30 @@
   border: 0;
 }
 
+.money_gif {
+  display: inline-block;
+  position:center;
+}
+
 .postbillbutton {
-  border-radius: 10px;
+  border-radius: 5px;
   padding: .5%;
   background-color:white;
   color: rgba(248,80,50,1);
   text-shadow: 1px 1px rgb(207, 68, 43);
-  font-family: "Lucida Console", Monaco, monospace;
+  font-family: Comfortaa;
   text-decoration: none;
   margin-left: 20%; 
   overflow-wrap: normal;
   width: 60%;
-  margin-top: 1%;
-  margin-bottom: 1%;
+  margin-top: 5%;
+  margin-bottom: 50%;
   text-align: center;
 }
 
 .link {
   color: white;
   text-shadow: 2px 2px rgb(207, 68, 43);
-  font-family: "Lucida Console", Monaco, monospace;
+  font-family: Comfortaa;
   text-decoration: none;
 }

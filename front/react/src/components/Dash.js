@@ -9,9 +9,11 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import HandlePay from './HandlePay'
+import img from './money.gif'
 
 const url = `http://127.0.0.1:5000/api/`
 const stripe = `http://127.0.0.1:5000/api/stripe/`
+
 
 
 export default class Dash extends React.Component {
@@ -54,6 +56,7 @@ export default class Dash extends React.Component {
         payIntent : undefined,
 
         refresh : false,
+        contributors: false,
     }
 }
 
@@ -101,6 +104,7 @@ export default class Dash extends React.Component {
                 description : customerObject['description'],
                 })
         window.sessionStorage.setItem('customer', this.state.customer)
+        console.log(window.sessionStorage.getItem('customer'))
         window.sessionStorage.setItem('username', this.state.description)
         }).then (()=> this.saveCustomer()).then(this.setState({refresh:true}))
     }
@@ -276,6 +280,11 @@ export default class Dash extends React.Component {
         this.setState({ payButton: !currentState });
     };
 
+    toggleContributors() {
+        const currentState = this.state.contributors;
+        this.setState({ contributors: !currentState });
+    };
+
     paidFormat(string,string2, string3, string4) {
         return string + " paid " + string2 + ' $' + string4 + ' for ' + string3 
     }
@@ -283,6 +292,27 @@ export default class Dash extends React.Component {
     money(string) {
         return "$"+string
     }
+
+    contributors(string) {
+        string = string.split(",")
+        if (string.length === 1)
+        {return string + " contributed"}
+        else if (string.length === 2)
+        {return string[0] + " and " + string[1] + " contributed"}
+        else if (string.length === 3)
+        {return string[0] + ", " + string[1] + ", and " + string[2] + " contributed"}
+        else if (string.length > 3)
+        // {return string.length + "people contributed"}
+        { let contributor_list = string.map((person, i) => {return <div>{person}<br/></div>})
+        return <div>
+        <button onClick={()=>this.toggleContributors()}>
+        <div style={{color:"white"}}>
+        {string.length + " people contributed"}
+        </div>
+        </button>
+        {this.state.contributors ? <div style={{color:"white", marginBottom:8}}>{contributor_list}</div> : (null)}
+        </div>
+    }}
 
     test () {
         this.setState({
@@ -306,31 +336,18 @@ export default class Dash extends React.Component {
                 <div className={element.bill_id === undefined ? "paycontainer" : "billcontainer"} >
                 <Navbar>
             {/* <span><div className="icon"></div></span> */}
-            <div classname='ower'>{element.due_by === undefined ? this.paidFormat(element.paid_by, element.paid_to, element.bill_owner, element.amount_paid) : element.due_by}</div>
+            <div className='ower'>{element.due_by === undefined ? this.paidFormat(element.paid_by, element.paid_to, element.bill_owner, element.amount_paid) : element.due_by}</div>
             <div className='amount'>{element.total_due ? (this.money(element.total_due)) : null}</div>
             <div className='company'>{element.due_to || null}</div>
-            <div>{element.due_date ? (null) : (<div className="comment"><ReactTimeAgo date = {element.created_on * 1000} timeStyle = "twitter"/></div>)}</div>
+            {/* <div>{element.due_date ? (null) : (<div className="comment"><ReactTimeAgo style={{width:80}} date = {element.created_on * 1000} timeStyle = "twitter"/></div>)}</div> */}
             </Navbar>
             <div className="comment">{element.caption || element.note}</div>
-            <div className={element.bill_id === undefined ? "paycontainer" : "due"}>{element.due_date ? (<div>Due on {element.due_date}</div>) : (null)}</div>
+            <div className={element.bill_id === undefined ? "comment" : "due"}>{element.due_date ? (<div>Due{element.due_date}</div>) : (<div className="time"><ReactTimeAgo date = {element.created_on * 1000} timeStyle = "twitter"/></div>)}</div>
             <div>
             {
             element.due_by === undefined ? 
             (null) 
             :
-            // (<button 
-            //     id={element.bill_id} 
-            //     className="paybutton" 
-            //     onClick={()=>{this.pay(element.bill_id)}}>PAY</button>)
-
-
-            // (<HandlePay 
-            //     payform={this.state.payForm}
-            //     id = {element.bill_id} 
-            //     function = {()=>this.pay(element.bill_id)}
-            //     handleInput = {(e)=>this.handleInput(e)}
-            // />)
-            
             (<div>
             <button className="width" onClick={()=>this.pay(element.bill_id)}><ExpansionPanel className='dropdown_container'>
             <ExpansionPanelSummary
@@ -351,8 +368,11 @@ export default class Dash extends React.Component {
             </ExpansionPanelDetails>
             </ExpansionPanel></button>
             </div>)
-
-
+            }
+            </div>
+            <div>
+            {
+                element.contributors ? (<div className='dropdown_title_wide'> <div className="contributors">{this.contributors(element.contributors)} </div></div>) : (null)
             }
             </div>
             </div>
@@ -411,21 +431,11 @@ export default class Dash extends React.Component {
                 onClick={()=>this.test()}>
                     TEST
                 </button>
-                {/* <button 
-                    className = "paybutton"
-                    onClick = {()=>{this.signup()}}>
-                    signup SUCESSFUL
-                </button>
-                <button 
-                    className = "paybutton"
-                    onClick = {()=>{this.badsignup()}}>
-                    signup UNSUCESSFUL
-                </button> */}
             </form>
         </div>}
         return (
             <div>
-        <button className="paybutton" onClick = {()=>this.createCustomerObject()}>
+        <button className="paybutton" onClick = {()=> this.test()}>
         mimics customer sign in for now
         </button>
                 <div>
@@ -441,7 +451,7 @@ export default class Dash extends React.Component {
                 className={classnames({ active: this.state.activeTab === '1'})}
                 onClick={() => { this.toggle('1'); }}
                 >
-                BILLY
+                <strong>BILLY</strong>
             </NavLink>
             </NavItem>
             <NavItem>
@@ -475,7 +485,8 @@ export default class Dash extends React.Component {
             <TabPane tabId="3">
                 {/* <MakePost/> */}
             <div className='paycontainer'>
-                <form>
+            <img className="money_gif" src={img} alt=""></img>
+                <form className="bottom">
                     <input 
                     className='input'
                     id='totalDue'

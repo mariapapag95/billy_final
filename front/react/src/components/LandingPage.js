@@ -1,24 +1,24 @@
 import React from 'react'
-import {NavLink} from 'reactstrap'
 
 function LandingPage() {
     return(
         <div className="background">
-        <div className="biglogo">BILLY 
+        <div className="biglogo">BILLY</div>
         <div className="about"> Easily help friends and family pay their bills, split bills, and fundraise</div>
+        <div className="about">
+        <br/>
+        <br/>
+        <a 
+        href="/username"
+        className="logintext"
+        >SIGN UP</a>
+        <br/>
+        <br/>
+        <a 
+        className="logintext"
+        href="/signup"
+        >LOGIN</a>
         </div>
-        <NavLink
-        style = {{textDecorationSkip: true, color: 'white'}}
-        className="landing landing1"
-        href="/username">
-        SIGN UP
-        </NavLink>
-        <NavLink
-        style = {{textDecorationSkip: true, color: 'white'}}
-        className="landing landing2"
-        href="/login">
-        LOG IN
-        </NavLink>
         </div>
     )
 }

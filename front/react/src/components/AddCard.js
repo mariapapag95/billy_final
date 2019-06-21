@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import { Redirect, Switch } from 'react-router-dom'
+import img from './card.gif'
 // import { Alert } from 'reactstrap';
 
 const stripe = `http://127.0.0.1:5000/api/stripe/`
@@ -46,7 +47,9 @@ class AddCard extends Component {
     render () {
         return(
             <div>
-                <form className="billcontainer">
+                <div className="paycontainer">
+                <img className="money_gif" width="100%" src={img} alt=""></img>
+                <form>
                     <p className="title">PAYMENT INFO</p>
                     <input
                         className = "input"
@@ -61,11 +64,12 @@ class AddCard extends Component {
                         className = "input"
                         placeholder = "CVC"/>
                     <button 
-                        className = "paybutton"
+                        className = "postbillbutton"
                         onClick={()=>{this.submit()}}>SUBMIT
                     </button>
                 </form>
                 {this.state.redirect ? (this.redirect()) : (null)}
+            </div>
             </div>
         )
     }
