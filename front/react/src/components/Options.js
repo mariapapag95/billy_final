@@ -6,6 +6,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import { Redirect, Switch } from 'react-router-dom'
 import { NavLink } from 'reactstrap';
 import '../App.css'
+import AddCard from './AddCard';
 
 // const url = `http://127.0.0.1:5000/api/`
 
@@ -13,6 +14,7 @@ class Options extends Component {
     state = {
         redirect : false, 
         username: undefined,
+        addCard : false,
     }
 
     redirect () {
@@ -22,6 +24,11 @@ class Options extends Component {
     logout () {
         window.sessionStorage.setItem('customer','')
         this.setState({ redirect: true })
+    }
+
+    addCard() {
+        const currentState = this.state.addCard;
+        this.setState({ addCard: !currentState })
     }
 
     render () {
@@ -35,12 +42,13 @@ class Options extends Component {
                 <div className="dropdown_title">MARIA</div>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                    <NavLink
+                    <button
                     className="dropdown"
-                    href='/addpaymentmethod'
-                    >ADD PAYMENT METHOD
-                    </NavLink>
+                    onClick={()=>this.addCard()}
+                    >{this.state.addCard ? "CANCEL" : "ADD PAYMENT METHOD"}
+                    </button>
                 </ExpansionPanelDetails>
+                    <div>{this.state.addCard ? (<ExpansionPanelDetails><AddCard/></ExpansionPanelDetails>) : (null)}</div>
                 <ExpansionPanelDetails>
                     <button 
                     className="dropdown"

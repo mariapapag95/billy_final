@@ -2,6 +2,7 @@ import React from 'react'
 
 function LandingPage() {
     return(
+        <div>
         <div className="background">
         <div className="biglogo">BILLY</div>
         <div className="about"> Easily help friends and family pay their bills, split bills, and fundraise</div>
@@ -16,8 +17,9 @@ function LandingPage() {
         <br/>
         <a 
         className="logintext"
-        href="/signup"
+        href="/login"
         >LOGIN</a>
+        </div>
         </div>
         </div>
     )

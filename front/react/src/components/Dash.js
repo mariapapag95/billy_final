@@ -13,7 +13,7 @@ import img from './money.gif'
 
 const url = `http://127.0.0.1:5000/api/`
 const stripe = `http://127.0.0.1:5000/api/stripe/`
-
+const customerTest = window.sessionStorage.getItem('customer')
 
 
 export default class Dash extends React.Component {
@@ -31,7 +31,7 @@ export default class Dash extends React.Component {
         note: '',
         id: undefined,
         collapsed: true,
-        login : true,
+        login : false,
 
         email : 'paying.user@example.com',
         name : "default",
@@ -104,7 +104,6 @@ export default class Dash extends React.Component {
                 description : customerObject['description'],
                 })
         window.sessionStorage.setItem('customer', this.state.customer)
-        console.log(window.sessionStorage.getItem('customer'))
         window.sessionStorage.setItem('username', this.state.description)
         }).then (()=> this.saveCustomer()).then(this.setState({refresh:true}))
     }
@@ -128,12 +127,17 @@ export default class Dash extends React.Component {
         })
     }
 
-    submit () {
+    submit (e) {
+        //e.preventDefault()
         this.setState({
-            password : document.getElementById("password").value,
-            email : document.getElementById("email").value,
-            username : document.getElementById("username").value,
-            name : document.getElementById("first").value + " " + document.getElementById("last").value,
+            // password : document.getElementById("password").value,
+            // email : document.getElementById("email").value,
+            // username : document.getElementById("username").value,
+            // name : document.getElementById("first").value + " " + document.getElementById("last").value,
+            password : "password",
+            email : "mariapapag95@gmail.com",
+            username : "BigPapaG",
+            name : "Maria Papageorgiou",
             login : true
             }
         , ()=>this.createCustomerObject())
@@ -289,6 +293,10 @@ export default class Dash extends React.Component {
         return string + " paid " + string2 + ' $' + string4 + ' for ' + string3 
     }
 
+    postFormat(string, string2, string3) {
+        return string + " owes $" + string2 + " to " +string3 
+    }
+
     money(string) {
         return "$"+string
     }
@@ -302,17 +310,17 @@ export default class Dash extends React.Component {
         else if (string.length === 3)
         {return string[0] + ", " + string[1] + ", and " + string[2] + " contributed"}
         else if (string.length > 3)
-        // {return string.length + "people contributed"}
-        { let contributor_list = string.map((person, i) => {return <div>{person}<br/></div>})
-        return <div>
-        <button onClick={()=>this.toggleContributors()}>
-        <div style={{color:"white"}}>
-        {string.length + " people contributed"}
-        </div>
-        </button>
-        {this.state.contributors ? <div style={{color:"white", marginBottom:8}}>{contributor_list}</div> : (null)}
-        </div>
-    }}
+        {return string.length + " people contributed"}
+        // { let contributor_list = string.map((person, i) => {return <div>{person}<br/></div>})
+        // return <div>
+        // <button onClick={()=>this.toggleContributors()}>
+        // <div style={{color:"white"}}>
+        // {string.length + " people contributed"}
+        // </div>
+        // </button>
+        // {this.state.contributors ? <div style={{color:"white", marginBottom:8}}>{contributor_list}</div> : (null)}
+        // </div>}
+    }
 
     test () {
         this.setState({
@@ -329,20 +337,23 @@ export default class Dash extends React.Component {
 
 
     render () {
+        console.log("FAKFAAEFD%%%%%%%%%%", customerTest)
         let posts = this.state.allPosts.map((element, i) => 
         {
-        if (this.state.login)
+        if (customerTest)
             {return <div key={i}>
                 <div className={element.bill_id === undefined ? "paycontainer" : "billcontainer"} >
                 <Navbar>
-            {/* <span><div className="icon"></div></span> */}
-            <div className='ower'>{element.due_by === undefined ? this.paidFormat(element.paid_by, element.paid_to, element.bill_owner, element.amount_paid) : element.due_by}</div>
-            <div className='amount'>{element.total_due ? (this.money(element.total_due)) : null}</div>
-            <div className='company'>{element.due_to || null}</div>
-            {/* <div>{element.due_date ? (null) : (<div className="comment"><ReactTimeAgo style={{width:80}} date = {element.created_on * 1000} timeStyle = "twitter"/></div>)}</div> */}
+            <div className='ower'>
+            {element.due_by === undefined ? 
+            this.paidFormat(element.paid_by, element.paid_to, element.bill_owner, element.amount_paid) 
+            : 
+            this.postFormat(element.due_by, element.total_due, element.due_to)}</div>
             </Navbar>
             <div className="comment">{element.caption || element.note}</div>
-            <div className={element.bill_id === undefined ? "comment" : "due"}>{element.due_date ? (<div>Due{element.due_date}</div>) : (<div className="time"><ReactTimeAgo date = {element.created_on * 1000} timeStyle = "twitter"/></div>)}</div>
+            <div className={element.bill_id === undefined ? "comment" : "due"}>{element.due_date ? (<div>Due {element.due_date}</div>) 
+            : 
+            (<div className="time"><ReactTimeAgo date = {element.created_on * 1000} timeStyle = "twitter"/></div>)}</div>
             <div>
             {
             element.due_by === undefined ? 
@@ -371,9 +382,7 @@ export default class Dash extends React.Component {
             }
             </div>
             <div>
-            {
-                element.contributors ? (<div className='dropdown_title_wide'> <div className="contributors">{this.contributors(element.contributors)} </div></div>) : (null)
-            }
+            {element.contributors ? (<div className='dropdown_title_wide'> <div className="contributors">{this.contributors(element.contributors)} </div></div>) : (null)}
             </div>
             </div>
             </div>}
@@ -382,6 +391,7 @@ export default class Dash extends React.Component {
         )
         if (!this.state.login) { return <div>
             <form className="billcontainer">
+            <br/><br/><br/>
                 <p className="title">PERSONAL INFO</p>
                 <input 
                     className = "input"
@@ -424,9 +434,10 @@ export default class Dash extends React.Component {
                     type = 'password'
                     placeholder = "CVC"/>
                 <button 
-                    className = "paybutton"
-                    onClick={()=>{this.submit()}}>SUBMIT
+                    className = "postbillbutton"
+                    onClick={()=>this.submit()}>SUBMIT
                 </button>
+                <br></br>
                 <button
                 onClick={()=>this.test()}>
                     TEST
@@ -442,7 +453,7 @@ export default class Dash extends React.Component {
                 <Nav tabs style={{backgroundColor: 'rgba(248,80,50,1)', 
                     fontFamily: 'Lucida Console, Monaco, monospace', 
                     fontStyle : "strong",
-                    fontSize : "large"}}>
+                    fontSize : "medium"}}>
                 <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
                 <Collapse isOpen={!this.state.collapsed} navbar></Collapse>
             <NavItem>
@@ -460,7 +471,7 @@ export default class Dash extends React.Component {
                 className={classnames({ active: this.state.activeTab === '2' })}
                 onClick={() => { this.toggle('2'); }}
                 >
-                USER
+                POST BILL
             </NavLink>
             </NavItem>
             <NavItem>
@@ -469,7 +480,7 @@ export default class Dash extends React.Component {
                 className={classnames({ active: this.state.activeTab === '3' })}
                 onClick={() => { this.toggle('3'); }}
                 >
-                POST BILL
+                ACCOUNT
             </NavLink>
             </NavItem>
             </Nav>
@@ -480,9 +491,6 @@ export default class Dash extends React.Component {
             </div>
             </TabPane>
             <TabPane tabId="2">
-                <UserPage/>
-            </TabPane>
-            <TabPane tabId="3">
                 {/* <MakePost/> */}
             <div className='paycontainer'>
             <img className="money_gif" src={img} alt=""></img>
@@ -519,6 +527,9 @@ export default class Dash extends React.Component {
                     </button>
                 </form>
             </div>
+            </TabPane>
+            <TabPane tabId="3">
+                <UserPage/>
             </TabPane>
             </TabContent>
             </div>

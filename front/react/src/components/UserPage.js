@@ -16,6 +16,7 @@ export default class UserPage extends React.Component {
         dropdownOpen: false,
         refresh: false,
         contributors: false,
+        login: true
     }
 }
 
@@ -31,8 +32,12 @@ export default class UserPage extends React.Component {
         this.fetchAll()
     }
 
-    paidFormat(string,string2) {
-        return string + " paid " + string2
+    paidFormat(string,string2, string3, string4) {
+        return string + " paid " + string2 + ' $' + string4 + ' for ' + string3 
+    }
+
+    postFormat(string, string2, string3) {
+        return string + " owes $" + string2 + " to " +string3 
     }
     
     toggle() {
@@ -67,43 +72,35 @@ export default class UserPage extends React.Component {
         this.setState({ contributors: !currentState });
     };
 
+    money(string) {
+        return "$"+string
+    }
+
     render () {
-        let posts = this.state.allPosts.map((element, i) => {
-            return <div key={i}>
-            <div className="center">
-            <div className={element.bill_id === undefined ? "paycontainer" : "billcontainer"} >
-            <Navbar>
-            <div className="center">
+        let posts = this.state.allPosts.map((element, i) => 
+        {
+        if (this.state.login)
+            {return <div key={i}>
+                <div className={element.bill_id === undefined ? "paycontainer" : "billcontainer"} >
+                <Navbar>
             {/* <span><div className="icon"></div></span> */}
-            <div>{element.due_by === undefined ? this.paidFormat(element.paid_by, element.bill_owner) : element.due_by}</div>
-            <div>${element.total_due || element.amount_paid}</div>
-            <div>{element.due_to || element.paid_to}</div>
-            </div>
+            <div className='ower'>
+            {element.due_by === undefined ? 
+            this.paidFormat(element.paid_by, element.paid_to, element.bill_owner, element.amount_paid) 
+            : 
+            this.postFormat(element.due_by, element.total_due, element.due_to)}</div>
+            {/* <div>{element.due_date ? (null) : (<div className="comment"><ReactTimeAgo style={{width:80}} date = {element.created_on * 1000} timeStyle = "twitter"/></div>)}</div> */}
             </Navbar>
             <div className="comment">{element.caption || element.note}</div>
-            <div className="comment"><div className="time"><ReactTimeAgo date = {element.created_on * 1000} timeStyle = "twitter"/></div></div>
-            <br/>
+            <div className={element.bill_id === undefined ? "comment" : "due"}>{element.due_date ? (<div>Due{element.due_date}</div>) : (<div className="time"><ReactTimeAgo date = {element.created_on * 1000} timeStyle = "twitter"/></div>)}</div>
             <div>
             {element.contributors ? (<div className='dropdown_title_wide'> <div className="contributors">{this.contributors(element.contributors)} </div></div>) : (null)}
             </div>
-            
-            <div> </div>
-            {/* <div>{element.due_by === undefined ? 
-            (
-            // <button 
-            // id={element.payment_id} 
-            // className="likebutton" 
-            // onClick={()=>{this.like(element.payment_id)}}>LIKE</button>
-            null
-            ) 
-            :(<button 
-                id={element.bill_id} 
-                className="paybutton" 
-                onClick={()=>{this.pay(element.bill_id)}}>PAY</button>)}</div> */}
             </div>
-            </div>
-            </div>
-        })
+            </div>}
+        else {return null}
+        }
+        )
             return (
                 <div>
                     <Options/>

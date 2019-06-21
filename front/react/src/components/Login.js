@@ -26,7 +26,8 @@ class Login extends Component {
     render () {
         return(
             <div>
-                <form>
+                <form className="paybutton">
+                <br/><br/><br/><br/><br/><br/><br/><br/>
                     <input 
                         className = "input"
                         id = "username"
@@ -35,12 +36,13 @@ class Login extends Component {
                     </input>
                     <input 
                         className = "input"
+                        type = "password"
                         id = "password"
-                        placeholer = "Password"
+                        placeholder = "Password"
                     >
                     </input>
                     <button 
-                        className = "paybutton"
+                        className = "postbillbutton"
                         onClick = {()=>{this.login()}}
                     >
                         LOGIN SUCESSFUL

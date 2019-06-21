@@ -4,7 +4,7 @@ import img from './card.gif'
 // import { Alert } from 'reactstrap';
 
 const stripe = `http://127.0.0.1:5000/api/stripe/`
-const customer = window.sessionStorage.getItem('customer')
+// const customer = window.sessionStorage.getItem('customer')
 
 class AddCard extends Component {
     state = {
@@ -25,7 +25,7 @@ class AddCard extends Component {
     addCard = () => {
         let post = {
             source : this.state.source,
-            customer : customer
+            customer : "cus_FIBSY9cvkmBErl"
         }
         fetch(stripe + `customer`, {
             method:"POST", 
